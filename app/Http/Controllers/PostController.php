@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\PostService;
+use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class PostController extends Controller
 {
     private $postService;
+    use SoftDeletes;
     public function __construct(PostService $postService)
     {
         $this->postService = $postService;
@@ -36,9 +41,13 @@ class PostController extends Controller
     public function index()
     {
         $posts = DB::table('posts')
-            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at')
-            ->join('users', 'created_user_id', '=', 'users.id')
-            ->get();
+            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.updated_at', 'posts.status')
+            ->join('users', 'users.id', '=', 'posts.created_user_id')
+            ->where('posts.deleted_at', '=', NULL)
+            ->paginate(10);
+        //dd($posts);
+        //$username = User::where('id', '=', $posts.created_user_id)->first();
+        //dd($posts['created_user_id']);
         return view('home', ['posts' => $posts]);
     }
     public function edit($id)
@@ -61,5 +70,15 @@ class PostController extends Controller
         ]);
         return view('posts.confirmupdate', ['post' => $request]);
     }
-    public function
+    public function delete($id)
+    {
+        //dd($id);
+        $this->postService->delete($id);
+        return redirect()->route('home');
+    }
+    public function profile($id)
+    {
+        $users = $this->postService->profile($id);
+        return view('posts.myprofile', ['user' => $users]);
+    }
 }

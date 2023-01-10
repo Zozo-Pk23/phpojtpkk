@@ -34,3 +34,10 @@ Route::post('/search', [PostController::class, 'search']);
 Route::post('/updateblade/{id}', [PostController::class, 'updateblade'])->name('updateblade');
 Route::post('/update/{id}', [PostController::class, 'update'])->name('update');
 Route::delete('/delete/{id}', [PostController::class, 'delete']);
+Route::get('/profile/{id}', [PostController::class, 'profile']);
+Route::get('/users', function () {
+    return view('users.users');
+});
+Route::get('/createuser', function () {
+    return view('users/createuser');
+});
