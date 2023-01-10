@@ -3,24 +3,41 @@
 @section('content')
 
 <div class="container bg-info text-center" style="width: 70%;padding:50px;border-radius :25px;">
+    <h1>Create User</h1>
     <form action="/confirmuser" method="post">
         @csrf
         <table class="table">
             <tr>
                 <td>Name</td>
-                <td><input type="text" class="form-control" name="name" id="name"></td>
+                <td><input type="text" class="form-control" name="name" id="name">
+                    @error('name')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
             </tr>
             <tr>
                 <td>Email</td>
-                <td><input type="text" class="form-control" name="email" id="email"></td>
+                <td><input type="text" class="form-control" name="email" id="email">
+                    @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
             </tr>
             <tr>
                 <td>Password</td>
-                <td><input type="text" class="form-control" name="password" id="password"></td>
+                <td><input type="text" class="form-control" name="password" id="password">
+                    @error('password')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
             </tr>
             <tr>
                 <td>Confirm Password</td>
-                <td><input type="text" class="form-control" name="confirmpassword" id="confirmpassword"></td>
+                <td><input type="text" class="form-control" name="confirmpassword" id="confirmpassword">
+                    @error('confirmpassword')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
             </tr>
             <tr>
                 <td>Type</td>

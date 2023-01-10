@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +42,4 @@ Route::get('/users', function () {
 Route::get('/createuser', function () {
     return view('users/createuser');
 });
+Route::post('/confirmuser',[UserController::class,'createuser']);
