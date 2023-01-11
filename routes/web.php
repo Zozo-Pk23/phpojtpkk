@@ -36,10 +36,11 @@ Route::post('/updateblade/{id}', [PostController::class, 'updateblade'])->name('
 Route::post('/update/{id}', [PostController::class, 'update'])->name('update');
 Route::delete('/delete/{id}', [PostController::class, 'delete']);
 Route::get('/profile/{id}', [PostController::class, 'profile']);
-Route::get('/users', function () {
-    return view('users.users');
-});
+Route::get('/users', [UserController::class, 'index'])->name('users');
 Route::get('/createuser', function () {
     return view('users/createuser');
-});
-Route::post('/confirmuser',[UserController::class,'createuser']);
+})->name('createuser');
+Route::post('/confirmuser', [UserController::class, 'createuser'])->name('confirmuser');
+Route::post('/saveuser', [UserController::class, 'saveuser']);
+Route::delete('/deleteuser/{id}', [UserController::class, 'deleteuser']);
+Route::post('/searchuser', [UserController::class, 'search']);

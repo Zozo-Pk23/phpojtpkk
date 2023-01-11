@@ -16,19 +16,19 @@
             </tr>
             <tr>
                 <td>Type</td>
-                <td>{{$user->name}}</td>
+                <td>{{$user->type}}</td>
             </tr>
             <tr>
                 <td>Phone</td>
-                <td>{{$user->name}}</td>
+                <td>{{$user->phone}}</td>
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td>{{$user->name}}</td>
+                <td>{{$user->date_of_birth}}</td>
             </tr>
             <tr>
                 <td>Address</td>
-                <td>{{$user->name}}</td>
+                <td>{{$user->address}}</td>
             </tr>
         </table>
         <button class="btn btn-info text-white">Edit</button>

@@ -10,9 +10,9 @@
                 <div class="col-8 text-center"><input type="text" class="form-control" name="searchitem" id="searchitem"></div>
                 <button class="btn btn-info col-4">Search</button>
             </form>
-            <div class="col-2 text-center"><a href="/createpost" style="text-decoration: none;color:white;padding:15px;background-color:blue;border-radius:15px">Upload</a></div>
-            <div class="col-2 text-center"><a href="/download"  style="text-decoration: none;color:white;padding:15px;background-color:blue;border-radius:15px">Download</a></div>
-            <div class="col-2 text-center"> <a href="/createpost" style="text-decoration: none;color:white;padding:15px;background-color:blue;border-radius:15px">Add</a></div>
+            <div class="col-2 text-center"><a href="/createpost" class="btn btn-info form-control">Upload</a></div>
+            <div class="col-2 text-center"><a href="/download"  class="btn btn-info form-control">Download</a></div>
+            <div class="col-2 text-center"> <a href="/createpost" class="btn btn-info form-control">Add</a></div>
         </div>
         <table class="table bg-white" id="mytable" style="width: 60%;">
             <thead>

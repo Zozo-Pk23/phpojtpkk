@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'type',
+        'profile',
         'address',
         'phone',
         'date_of_birth',

@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'name' => 'Phyo Khant Kyaw',
             'email' => 'scm.phyokhantkyaw@gmail.com',
             'password' => Hash::make('password'),
+            'profile' => 'pkk.jpg',
             'type' => 0,
             'created_user_id' => 1,
             'updated_user_id' => 1,
