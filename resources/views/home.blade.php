@@ -29,7 +29,6 @@
                 </tr>
             </thead>
             <tbody>
-                @if(type==0)
                 @if(count($posts)===0)
                 <tr>
                     <td colspan="6" class="text-center">There is no posts</td>

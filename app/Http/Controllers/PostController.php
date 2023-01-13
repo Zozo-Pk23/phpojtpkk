@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
@@ -65,12 +66,25 @@ class PostController extends Controller
     }
     public function index()
     {
-        $posts = DB::table('posts')
-            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.updated_at', 'posts.status')
-            ->join('users', 'users.id', '=', 'posts.created_user_id')
-            ->where('posts.deleted_at', '=', NULL)
-            ->paginate(10);
-        return view('home', ['posts' => $posts]);
+        $loginUser = Auth::user()->type;
+        $loginUserId = Auth::user()->id;
+        if ($loginUser == 1) {
+            $posts = DB::table('posts')
+                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.updated_at', 'posts.status')
+                ->join('users', 'users.id', '=', 'posts.created_user_id')
+                //->where('posts.deleted_at', '=', NULL)
+                ->where('posts.created_user_id', '=', $loginUserId)
+                ->paginate(10);
+
+            return view('home', ['posts' => $posts]);
+        } else {
+            $posts = DB::table('posts')
+                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.updated_at', 'posts.status')
+                ->join('users', 'users.id', '=', 'posts.created_user_id')
+                ->where('posts.deleted_at', '=', NULL)
+                ->paginate(10);
+            return view('home', ['posts' => $posts]);
+        }
     }
     public function edit($id)
     {
