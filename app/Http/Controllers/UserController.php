@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -69,7 +70,33 @@ class UserController extends Controller
     }
     public function search(Request $request)
     {
-        $users=$this->userService->searchuser($request);
+        $users = $this->userService->searchuser($request);
         return view('users.users', ['users' => $users]);
+    }
+    public function changepasswordscreen($id)
+    {
+        $password = $this->userService->changepasswordscreen($id);
+        return view('users.passwordreset', ['password' => $password]);
+    }
+    public function updatepassword($id, Request $request)
+    {
+        $old = User::where('id', $id)->first();
+        $typepass = $request->oldpassword;
+        if (Hash::check($typepass, $old->password)) {
+            $validated = $request->validate([
+                'oldpassword' => 'required',
+                'newpassword' =>  [
+                    'required',
+                    'min:8',
+                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9]).*$/',
+                    'same:password_confirmation'
+                ],
+                'password_confirmation' => 'required',
+            ]);
+            $this->userService->updatepassword($id, $request);
+            return redirect()->route('home');
+        } else {
+            return redirect()->back()->withErrors(['msg' => 'Reenter your old password!!!!']);;
+        }
     }
 }

@@ -36,24 +36,25 @@
                 <p class="fw-bolder">Status :</p>
             </div>
             <div class="col">
-                This is checkbox
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                </div>
             </div>
-        </div>
-        <div class="row my-3">
-            <div class="col">
+            <div class="row my-3">
+                <div class="col">
 
-            </div>
-            <div class="col">
-                <div class="row">
-                    <div class="col">
-                        <input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm">
-                    </div>
-                    <div class="col">
-                        <input type="submit" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="document.getElementById('title').value = null;document.getElementById('des').value = null; return false;">
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm">
+                        </div>
+                        <div class="col">
+                            <input type="submit" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="document.getElementById('title').value = null;document.getElementById('des').value = null; return false;">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </form>
 @endsection

@@ -25,4 +25,12 @@ class UserService implements userInterface
     {
         return $this->UserDao->searchuser($request);
     }
+    public function changepasswordscreen($id)
+    {
+        return $this->UserDao->changepasswordscreen($id);
+    }
+    public function updatepassword($id, $request)
+    {
+        return $this->UserDao->updatepassword($id, $request);
+    }
 }

@@ -16,7 +16,7 @@ class UserDao implements userDaoInterface
         $user = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
-            'password' =>Hash::make($request['password']),
+            'password' => Hash::make($request['password']),
             'profile' => $request['profile'],
             'type' => $request['type'],
             'phone' => $request['phone'],
@@ -38,10 +38,26 @@ class UserDao implements userDaoInterface
             ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
             //->where('users.deleted_at', '=', NULL)
+            
+            ->whereBetween('users.date_of_birth', [$request->createdfrom, $request->createdto])
             ->orWhere('users.name', 'LIKE', '%' . $request->searchitem . '%')
             ->orWhere('users.email', 'LIKE', '%' . $request->searchitem . '%')
-            ->orWhereBetween('users.date_of_birth', [$request->createdfrom, $request->createdto])
             ->paginate(7);
         return $search;
+    }
+    public function changepasswordscreen($id)
+    {
+        //dd($id);
+        $pass = User::where('id', $id)->first();
+        // $hashpassword=$pass->password;
+        // dd($hashpassword);
+        return $pass;
+    }
+    public function updatepassword($id, $request)
+    {
+        $user = User::where('id', $id)->update([
+            'password' => $request->newpassword,
+        ]);
+        return $user;
     }
 }

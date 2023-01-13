@@ -1,10 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-<form action="">
+<form action="/edit_profile/{{$user->id}}" method="get" enctype="multipart/form-data">
     @csrf
     <div class="container justify-content-center text-center">
         <h1>User Profile</h1>
+        <!-- <input type="hidden" name="id" value="{{$user->id}}">
+        <input type="hidden" name="name" value="{{$user->name}}">
+        <input type="hidden" name="email" value="{{$user->email}}">
+        <input type="hidden" name="type" value="{{$user->type}}">
+        <input type="hidden" name="phone" value="{{$user->phone}}">
+        <input type="hidden" name="profile" value="{{$user->profile}}">
+        <input type="hidden" name="date_of_birth" value="{{$user->date_of_birth}}">
+        <input type="hidden" name="address" value="{{$user->address}}"> -->
         <table class="table">
             <tr>
                 <td>Name</td>
@@ -16,7 +24,13 @@
             </tr>
             <tr>
                 <td>Type</td>
-                <td>{{$user->type}}</td>
+                <td>
+                    @if($user->type==0)
+                    Admin
+                    @else
+                    User
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td>Phone</td>
@@ -30,6 +44,7 @@
                 <td>Address</td>
                 <td>{{$user->address}}</td>
             </tr>
+
         </table>
         <button class="btn btn-info text-white">Edit</button>
     </div>

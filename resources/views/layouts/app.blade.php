@@ -48,40 +48,45 @@
                         </li>
                         @endif
 
-                        @if (Route::has('register'))
+                        <!-- @if (Route::has('register'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                         </li>
-                        @endif
+                        @endif -->
                         @else
                         <li class="nav-item"><a href="/home" role="button" class="nav-link">Posts</a></li>
+
+                        @if (Auth::user()->type == 0)
                         <li class="nav-item"><a href="/users" role="button" class="nav-link">Users</a></li>
+                        @endif
                         <li class="nav-item"><a href="/profile/{{Auth::user()->id}}" role="button" class="nav-link">{{Auth::user()->name}}</a></li>
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }}
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
                             </a>
-
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
                         </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                        <!-- <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }}
+                            </a> -->
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+                        <!-- <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown"> -->
+
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                </div>
+                </li>
+                @endguest
+                </ul>
+            </div>
+    </div>
+    </nav>
+
+    <main class="py-4">
+        @yield('content')
+    </main>
     </div>
 </body>
 

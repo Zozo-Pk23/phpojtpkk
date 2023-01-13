@@ -10,8 +10,11 @@
                 <div class="col-8 text-center"><input type="text" class="form-control" name="searchitem" id="searchitem"></div>
                 <button class="btn btn-info col-4">Search</button>
             </form>
-            <div class="col-2 text-center"><a href="/createpost" class="btn btn-info form-control">Upload</a></div>
-            <div class="col-2 text-center"><a href="/download"  class="btn btn-info form-control">Download</a></div>
+            <div class="col-2 text-center"><a href="/upload" class="btn btn-info form-control">Upload</a></div>
+            <form action="/download" method="post" class="col-2 text-center">
+                @csrf
+                <button class="btn btn-info form-control">Download</button>
+            </form>
             <div class="col-2 text-center"> <a href="/createpost" class="btn btn-info form-control">Add</a></div>
         </div>
         <table class="table bg-white" id="mytable" style="width: 60%;">
@@ -26,6 +29,7 @@
                 </tr>
             </thead>
             <tbody>
+                @if(type==0)
                 @if(count($posts)===0)
                 <tr>
                     <td colspan="6" class="text-center">There is no posts</td>
@@ -75,13 +79,13 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <form id="delete-form" method="POST" action="delete/{{$post->id}}">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
 
-                                <div class="form-group">
-                                    <button class="btn-danger btn">Delete</button>
-                                </div>
-                            </form>
+                            <div class="form-group">
+                                <button class="btn-danger btn">Delete</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

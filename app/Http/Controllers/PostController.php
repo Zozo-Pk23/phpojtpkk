@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PostExport;
 use App\Http\Services\PostService;
+use App\Imports\PostImport;
+use App\Models\Post;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PostController extends Controller
 {
@@ -17,6 +22,28 @@ class PostController extends Controller
     public function __construct(PostService $postService)
     {
         $this->postService = $postService;
+    }
+    public function download(Request $request)
+    {
+        return Excel::download(new PostExport, 'user.csv');
+    }
+    public function upload(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|mimes:csv|max:2080'
+        ]);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+        }
+        Excel::import(new PostImport, $file);
+        if ('error') {
+            return redirect()->back();
+        } else {
+            $fname = $file->getClientOriginalName();
+            $file->move("fies", $fname);
+            return redirect()->route('home');
+        }
     }
     public function save(Request $request)
     {
@@ -34,8 +61,6 @@ class PostController extends Controller
     public function search(Request $request)
     {
         $posts = $this->postService->search($request);
-
-        //dd($posts);
         return view('home', ['posts' => $posts]);
     }
     public function index()
@@ -45,9 +70,6 @@ class PostController extends Controller
             ->join('users', 'users.id', '=', 'posts.created_user_id')
             ->where('posts.deleted_at', '=', NULL)
             ->paginate(10);
-        //dd($posts);
-        //$username = User::where('id', '=', $posts.created_user_id)->first();
-        //dd($posts['created_user_id']);
         return view('home', ['posts' => $posts]);
     }
     public function edit($id)
@@ -57,13 +79,11 @@ class PostController extends Controller
     }
     public function update($id, Request $request)
     {
-        //dd($id);
         $this->postService->update($id, $request);
         return redirect()->route('home');
     }
     public function updateblade($id, Request $request)
     {
-        //dd($request);
         $validated = $request->validate([
             'title' => 'required|unique:posts,title|max:255',
             'des' =>  'required',
@@ -72,7 +92,6 @@ class PostController extends Controller
     }
     public function delete($id)
     {
-        //dd($id);
         $this->postService->delete($id);
         return redirect()->route('home');
     }
@@ -80,5 +99,32 @@ class PostController extends Controller
     {
         $users = $this->postService->profile($id);
         return view('posts.myprofile', ['user' => $users]);
+    }
+    public function editProfile($id)
+    {
+        $users = $this->postService->profile($id);
+
+        return view('posts.userupdateform', ['user' => $users]);
+    }
+    public function confirmProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email:rfc',
+            'phone' => 'required',
+        ]);
+        if ($request->hasFile('profile')) {
+            $file = $request->file('profile');
+            $fname = $file->getClientOriginalName();
+            $file->move("images", $fname);
+        } else {
+            $fname = $request->oldprofile;
+        }
+        return view('posts.userupdateconfirm', ['user' => $request, 'fname' => $fname]);
+    }
+    public function updateUser($id, Request $request)
+    {
+        $post = $this->postService->updateProfile($id, $request);
+        return redirect()->route('home');
     }
 }

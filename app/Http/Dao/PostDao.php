@@ -21,7 +21,7 @@ class PostDao implements postDaoInterface
     {
         $id = Auth::user()->id;
         $search = DB::table('posts')
-            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at','posts.status','posts.updated_at',)
+            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.status', 'posts.updated_at',)
             ->join('users', 'users.id', '=', 'posts.created_user_id')
             ->where('posts.title', 'LIKE', '%' . $request->searchitem . '%')
             ->orWhere('posts.description', 'LIKE', '%' . $request->searchitem . '%')
@@ -46,8 +46,23 @@ class PostDao implements postDaoInterface
         $post = Post::where('id', $id)->delete();
         return $post;
     }
-    public function profile($id){
-        $user=User::where('id',$id)->first();
+    public function profile($id)
+    {
+        $user = User::where('id', $id)->first();
+        return $user;
+    }
+    public function updateProfile($id, $request)
+    {
+        // sdd($request);
+        $user = User::where('id', $id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
+            'phone' => $request->phone,
+            'date_of_birth' => $request->date,
+            'address' => $request->address,
+            'profile' => $request->profile,
+        ]);
         return $user;
     }
 }

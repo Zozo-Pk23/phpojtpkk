@@ -27,6 +27,16 @@
                 <p>{{$post->des}}</p>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <p class="fw-bolder">Status :</p>
+            </div>
+            <div class="col">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                </div>
+            </div>
+        </div>
         <div class="row my-3">
             <div class="col">
 

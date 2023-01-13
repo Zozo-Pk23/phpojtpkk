@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
+Route::prefix('admin')->middleware('auth')->group(function () {
+});
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,7 +18,14 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/users', [UserController::class, 'index'])->name('users');
+Route::get('/createuser', function () {
+    return view('users/createuser');
+})->name('createuser');
+Route::post('/confirmuser', [UserController::class, 'createuser'])->name('confirmuser');
+Route::post('/saveuser', [UserController::class, 'saveuser']);
+Route::delete('/deleteuser/{id}', [UserController::class, 'deleteuser']);
+Route::post('/searchuser', [UserController::class, 'search']);
 Route::get('/', function () {
     return view('welcome');
 });
@@ -35,12 +44,14 @@ Route::post('/search', [PostController::class, 'search']);
 Route::post('/updateblade/{id}', [PostController::class, 'updateblade'])->name('updateblade');
 Route::post('/update/{id}', [PostController::class, 'update'])->name('update');
 Route::delete('/delete/{id}', [PostController::class, 'delete']);
+Route::post('/download', [PostController::class, 'download'])->name('download');
+Route::get('/upload', function () {
+    return view('posts/upload');
+});
+Route::post('/uploadpost', [PostController::class, 'upload']);
 Route::get('/profile/{id}', [PostController::class, 'profile']);
-Route::get('/users', [UserController::class, 'index'])->name('users');
-Route::get('/createuser', function () {
-    return view('users/createuser');
-})->name('createuser');
-Route::post('/confirmuser', [UserController::class, 'createuser'])->name('confirmuser');
-Route::post('/saveuser', [UserController::class, 'saveuser']);
-Route::delete('/deleteuser/{id}', [UserController::class, 'deleteuser']);
-Route::post('/searchuser', [UserController::class, 'search']);
+Route::get('/edit_profile/{id}', [PostController::class, 'editProfile']);
+Route::post('/confirm_profile', [PostController::class, 'confirmProfile']);
+Route::post('/updateuser/{id}', [PostController::class, 'updateUser']);
+Route::get('/changepasswordscreen/{id}', [UserController::class, 'changepasswordscreen'])->name('changepasswordscreen');
+Route::post('/updatepassword/{id}', [UserController::class, 'updatepassword']);
