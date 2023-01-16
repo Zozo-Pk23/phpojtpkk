@@ -12,7 +12,7 @@
                 <p>Old Password :</p>
             </div>
             <div class="col">
-                <input type="text" class="form-control" name="oldpassword" id="oldpassword">
+                <input type="password" class="form-control" name="oldpassword" id="oldpassword">
                 @error('oldpassword')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -23,7 +23,7 @@
                 <p>New Password :</p>
             </div>
             <div class="col">
-                <input type="text" class="form-control" name="newpassword" id="newpassword">
+                <input type="password" class="form-control" name="newpassword" id="newpassword">
                 @error('newpassword')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -34,7 +34,7 @@
                 <p>Confirm Password :</p>
             </div>
             <div class="col">
-                <input type="text" class="form-control" name="password_confirmation" id="password_confirmation">
+                <input type="password" class="form-control" name="password_confirmation" id="password_confirmation">
                 @error('password_confirmation')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -42,7 +42,9 @@
         </div>
         <div class="row">
             <div class="col">
-                <button class="form-control btn-white" onclick="document.getElementById('oldpassword').value=null;document.getElementById('newpassword').value=null;document.getElementById('password_confirmation').value=null;" type="reset">Clear</button>
+                <button class="form-control btn-white" onclick="document.getElementById('oldpassword').value=null;
+                document.getElementById('newpassword').value=null;
+                document.getElementById('password_confirmation').value=null;" type="reset">Clear</button>
             </div>
             <div class="col">
                 <input class="form-control btn-info" type="submit" value="Change Password">

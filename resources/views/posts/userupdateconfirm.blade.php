@@ -46,7 +46,7 @@
             </div>
             
             <div class="row my-3">
-                <div class="col"><a href="{{ route('createuser') }}"><button class="btn btn-default bg-white">Cancel</button></a></div>
+                <div class="col"><a href="{{ route('home') }}"><button class="btn btn-default bg-white">Cancel</button></a></div>
                 <div class="col"><input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm"></div>
             </div>
         </div>

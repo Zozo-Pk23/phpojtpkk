@@ -21,9 +21,10 @@ class PostDao implements postDaoInterface
     {
         $id = Auth::user()->id;
         $search = DB::table('posts')
-            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.status', 'posts.updated_at',)
+            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.status', 'posts.updated_at',)
             ->join('users', 'users.id', '=', 'posts.created_user_id')
             ->where('posts.title', 'LIKE', '%' . $request->searchitem . '%')
+            ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
             ->orWhere('posts.description', 'LIKE', '%' . $request->searchitem . '%')
             ->paginate(10);
 
@@ -38,7 +39,7 @@ class PostDao implements postDaoInterface
     public function update($id, $request)
     {
         $updated_user_id = Auth::user()->id;
-        $post = Post::where('id', $id)->update(['title' => $request->title, 'description' => $request->des, 'updated_user_id' => $updated_user_id]);
+        $post = Post::where('id', $id)->update(['title' => $request->title, 'description' => $request->des, 'updated_user_id' => $updated_user_id, 'status' => $request->status]);
         return $post;
     }
     public function delete($id)

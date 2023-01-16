@@ -34,7 +34,13 @@
             </div>
             <div class="row my-3">
                 <div class="col">Type</div>
-                <div class="col">{{$user->type}}</div>
+                <div class="col">
+                    @if($user->type=='0')
+                    User
+                    @else
+                    Admin
+                    @endif
+                </div>
             </div>
             <div class="row my-3">
                 <div class="col">Phone</div>
@@ -49,7 +55,7 @@
                 <div class="col">{{$user->address}}</div>
             </div>
             <div class="row my-3">
-                <div class="col"><a href="{{ route('createuser') }}"><button class="btn btn-default bg-white">Cancel</button></a></div>
+                <div class="col"> <a href="/createuser" class="btn btn-primary">Cancel</a></div>
                 <div class="col"><input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm"></div>
             </div>
         </div>

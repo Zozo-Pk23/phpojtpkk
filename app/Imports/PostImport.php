@@ -22,18 +22,16 @@ class PostImport implements ToModel, WithValidation, WithHeadingRow
 
     public function rules(): array
     {
-        $errors = [
-            'title' => ['required','max:50','unique:posts,title'],
+        return [
+            'title' => ['required', 'max:50', 'unique:posts,title'],
             'description' => ['required'],
         ];
-     //   dd($data);
-        return $errors;
     }
     public function model(array $row)
     {
         return new Post([
-            'title' => $row['title'],
-            'description' => $row['description'],
+            'title'     => $row['title'],
+            'description'    => $row['description'],
             'status' => 1,
             'created_user_id' => Auth::user()->id,
             'updated_user_id' => Auth::user()->id,

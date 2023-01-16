@@ -22,13 +22,19 @@
                 <tr>
                     <th scope="col">Post Title</th>
                     <th scope="col">Post Description</th>
+                    <th scope="col">Status</th>
+                    @if($type==0)
                     <th scope="col">Posted User</th>
+                    <th scope="col">Updated User</th>
+                    @endif
                     <th scope="col">Posted Date</th>
+                    <th scope="col">Updated Date</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
+                
                 @if(count($posts)===0)
                 <tr>
                     <td colspan="6" class="text-center">There is no posts</td>
@@ -40,8 +46,24 @@
                         <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{$post->id}}">{{$post->title}}</button>
                     </th>
                     <td>{{$post->description}}</td>
+
+                    @if($post->status==1)
+                    <td>
+                        Active
+                    </td>
+                    @else
+                    <td>
+                        Not Active
+                    </td>
+                    @endif
+                    @if($type==0)
                     <td>{{$post->pname}}</td>
-                    <td>{{$post->created_at}}</td>
+                    <td>{{$post->uname}}</td>
+                    @endif
+                    <td>
+                    {{date('d-m-Y', strtotime($post->created_at))}}
+                    </td>
+                    <td>{{date('d-m-Y', strtotime($post->updated_at))}}</td>
                     <td><a href="updatepost/{{$post->id}}">Edit</a></td>
                     <td>
                         <!-- <a href="">

@@ -64,9 +64,17 @@
                     <img id="preview-image-before-upload" src="" alt="preview image" style="max-height: 250px;">
                 </td>
             </tr>
-            <tr><td><a href="/changepasswordscreen/{{$user->id}}">Change your password</a></td></tr>
             <tr>
-                <td><input type="button" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="document.getElementById('title').value = null;document.getElementById('des').value = null; return false;"></td>
+                <td><a href="/changepasswordscreen/{{$user->id}}">Change your password</a></td>
+            </tr>
+            <tr>
+                <td><input type="button" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="document.getElementById('name').value = null;document.getElementById('email').value = null;
+                document.getElementById('phone').value = null;
+                document.getElementById('date').value = null;
+                document.getElementById('address').value = null;
+                document.getElementById('profile').value = null;
+                
+                return false;"></td>
                 <td> <input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm"></td>
             </tr>
         </table>

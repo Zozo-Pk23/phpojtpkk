@@ -32,9 +32,16 @@
                 <p class="fw-bolder">Status :</p>
             </div>
             <div class="col">
+                {{$post->status}}
+                @if($post->status==0)
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" disabled>
                 </div>
+                @else
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked disabled>
+                </div>
+                @endif
             </div>
         </div>
         <div class="row my-3">

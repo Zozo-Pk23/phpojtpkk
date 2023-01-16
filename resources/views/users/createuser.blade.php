@@ -63,7 +63,11 @@
             </tr>
             <tr>
                 <td>Profile</td>
-                <td><input type="file" class="form-control" name="profile" id="profile"></td>
+                <td><input type="file" class="form-control" name="profile" id="profile">
+                    @error('profile')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
             </tr>
             <tr>
                 <td></td>
@@ -72,7 +76,19 @@
                 </td>
             </tr>
             <tr>
-                <td><input type="submit" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="document.getElementById('title').value = null;document.getElementById('des').value = null; return false;"></td>
+                <td>
+                    <input type="button" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="
+                    document.getElementById('name').value = null;
+                    document.getElementById('email').value = null;
+                    document.getElementById('password').value = null;
+                    document.getElementById('confirmpassword').value = null;
+                document.getElementById('phone').value = null;
+                document.getElementById('date').value = null;
+                document.getElementById('address').value = null;
+                document.getElementById('profile').value = null;
+                
+                return false;">
+                </td>
                 <td> <input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm"></td>
             </tr>
         </table>

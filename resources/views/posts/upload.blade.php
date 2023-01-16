@@ -7,17 +7,20 @@
         @csrf
         <div class="bg-white" style="padding: 20px;">
             <input type="file" class="col-12 form-control" name="file">
-            @error('file')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-            @if($errors->any())
-            <div class="text-danger">There must be some error in your excel file</div>
-            <ol>
-                @foreach($errors->all() as $error)
-                <li>{{$error}}</li>
-                @endforeach
-            </ol>
-            @endif
+            @if(count($errors->getMessages()) > 0)
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <strong>Validation Errors:</strong>
+                <ul>
+                    @foreach($errors->getMessages() as $errorMessages)
+                    @foreach($errorMessages as $errorMessage)
+                    <li>
+                        {{ $errorMessage }}
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    </li>
+                    @endforeach
+                    @endforeach
+                </ul>
+            </div>@endif
             <button class="btn btn-success my-5">Upload</button>
         </div>
     </form>

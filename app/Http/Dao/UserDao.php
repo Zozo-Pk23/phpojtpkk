@@ -34,15 +34,15 @@ class UserDao implements userDaoInterface
     }
     public function searchuser($request)
     {
+        //dd($request->createdfrom, $request->createdto);
         $search = DB::table('users')
             ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
-            //->where('users.deleted_at', '=', NULL)
-            
+            ->where('users.deleted_at', '=', NULL)
             ->whereBetween('users.date_of_birth', [$request->createdfrom, $request->createdto])
-            ->orWhere('users.name', 'LIKE', '%' . $request->searchitem . '%')
-            ->orWhere('users.email', 'LIKE', '%' . $request->searchitem . '%')
-            ->paginate(7);
+            ->where('users.name', 'LIKE', '%' . $request->searchitem . '%')
+            ->where('users.email', 'LIKE', '%' . $request->searchitem . '%')
+            ->paginate(10);
         return $search;
     }
     public function changepasswordscreen($id)

@@ -17,6 +17,11 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
+    /**
+     * Get all users
+     * 
+     * @return array $users
+     */
     public function index()
     {
         $users = DB::table('users')
@@ -24,10 +29,27 @@ class UserController extends Controller
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
             ->where('users.deleted_at', '=', NULL)
             ->paginate(7);
-        // $createdUserName = User::where('id', '=', $users->created_user_id)->first();
-        //dd($users->created_user_id);
         return view('users.users', ['users' => $users]);
     }
+    /**
+     * Search user
+     * 
+     * @param Request $request
+     * 
+     * @return $users
+     */
+    public function search(Request $request)
+    {
+        $users = $this->userService->searchuser($request);
+        return view('users.users', ['users' => $users]);
+    }
+    /**
+     * Create user
+     * 
+     * @param Request $request
+     * 
+     * @return $user and $fname
+     */
     public function createuser(Request $request)
     {
         $validated = $request->validate([
@@ -40,44 +62,55 @@ class UserController extends Controller
                 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             ],
             'confirmpassword' => 'required',
+            'profile' => 'required'
         ]);
-
-        // $file = $request->File('profile');
-        // $newname = rand() . '.' . $file->getClientOriginalExtension();
-        // $file->move(public_path("images"),$newname);
-        // return back();
-
-        //dd($request->profile);
         if ($request->hasFile('profile')) {
             $file = $request->file('profile');
             $fname = $file->getClientOriginalName();
             $file->move("images", $fname);
         }
-        // dd($request->file('profile'));
-
-
         return view('users.confirmuser', ['user' => $request, 'fname' => $fname]);
     }
+    /**
+     * Save User to Database
+     * 
+     * @param Request $request
+     * 
+     */
     public function saveuser(Request $request)
     {
         $this->userService->save($request);
         return redirect()->route('users');
     }
+    /**
+     * Delete User
+     * 
+     * @param $id
+     * 
+     */
     public function deleteuser($id)
     {
         $this->userService->deleteuser($id);
         return redirect()->route('users');
     }
-    public function search(Request $request)
-    {
-        $users = $this->userService->searchuser($request);
-        return view('users.users', ['users' => $users]);
-    }
+    /**
+     * Change password screen
+     * 
+     * @param $id
+     * 
+     * @return $password
+     */
     public function changepasswordscreen($id)
     {
         $password = $this->userService->changepasswordscreen($id);
         return view('users.passwordreset', ['password' => $password]);
     }
+    /**
+     * Update password
+     * 
+     * @param $id,Request $request
+     * 
+     */
     public function updatepassword($id, Request $request)
     {
         $old = User::where('id', $id)->first();

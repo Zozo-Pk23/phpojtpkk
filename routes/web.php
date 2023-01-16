@@ -55,3 +55,4 @@ Route::post('/confirm_profile', [PostController::class, 'confirmProfile']);
 Route::post('/updateuser/{id}', [PostController::class, 'updateUser']);
 Route::get('/changepasswordscreen/{id}', [UserController::class, 'changepasswordscreen'])->name('changepasswordscreen');
 Route::post('/updatepassword/{id}', [UserController::class, 'updatepassword']);
+Route::get('forgotpassword', [UserController::class, 'forgotpassword']);
