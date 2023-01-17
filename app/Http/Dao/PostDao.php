@@ -14,7 +14,7 @@ class PostDao implements postDaoInterface
     {
         $id = Auth::user()->id;
         //dd($id);
-        $user =  Post::create(['title' => $request['title'], 'description' => $request['des'], "created_user_id" => $id]);
+        $user =  Post::create(['title' => $request['title'], 'description' => $request['des'], "created_user_id" => $id, "updated_user_id" => $id]);
         return $user;
     }
     public function search($request)

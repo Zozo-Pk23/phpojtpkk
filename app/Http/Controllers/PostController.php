@@ -35,9 +35,10 @@ class PostController extends Controller
         $loginUserId = Auth::user()->id;
         if ($loginUser == 1) {
             $posts = DB::table('posts')
-                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at', 'posts.updated_at', 'posts.status',)
-                ->join('users', 'users.id', '=', 'posts.created_user_id')
-                //->where('posts.deleted_at', '=', NULL)
+                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.updated_at', 'posts.status',)
+                ->leftJoin('users', 'users.id', '=', 'posts.created_user_id')
+                ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
+                ->where('posts.deleted_at', '=', NULL)
                 ->where('posts.created_user_id', '=', $loginUserId)
                 ->paginate(10);
 
@@ -45,10 +46,11 @@ class PostController extends Controller
         } else {
             $posts = DB::table('posts')
                 ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.updated_at', 'posts.status')
-                ->leftJoin('users', 'users.id', '=', 'posts.created_user_id')
-                ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
+                ->join('users', 'users.id', '=', 'posts.created_user_id')
+                ->join('users as uone', 'uone.id', '=', 'posts.updated_user_id')
                 ->where('posts.deleted_at', '=', NULL)
                 ->paginate(50);
+            // dd($posts);
             return view('home', ['posts' => $posts, 'type' => $loginUser]);
         }
     }
