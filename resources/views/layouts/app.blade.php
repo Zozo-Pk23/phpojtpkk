@@ -59,9 +59,8 @@
                         @if (Auth::user()->type == 0)
                         <li class="nav-item"><a href="/users" role="button" class="nav-link">Users</a></li>
                         @endif
-                        @if (Auth::user()->type == 1)
                         <li class="nav-item"><a href="/profile/{{Auth::user()->id}}" role="button" class="nav-link">{{Auth::user()->name}}</a></li>
-                        @endif
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}

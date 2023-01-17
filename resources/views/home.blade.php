@@ -7,7 +7,7 @@
         <div class="row justify-content-center my-5">
             <form action="/search" method="post" class="col-6 row">
                 @csrf
-                <div class="col-8 text-center"><input type="text" class="form-control" name="searchitem" id="searchitem"></div>
+                <div class="col-8 text-center"><input type="text" placeholder="Search title or description" class="form-control" name="searchitem" id="searchitem"></div>
                 <button class="btn btn-info col-4">Search</button>
             </form>
             <div class="col-2 text-center"><a href="/upload" class="btn btn-info form-control">Upload</a></div>
@@ -34,7 +34,7 @@
                 </tr>
             </thead>
             <tbody>
-                
+
                 @if(count($posts)===0)
                 <tr>
                     <td colspan="6" class="text-center">There is no posts</td>
@@ -43,7 +43,7 @@
                 @foreach($posts as $post)
                 <tr>
                     <th scope="row">
-                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{$post->id}}">{{$post->title}}</button>
+                        <a data-bs-target="#exampleModal{{$post->id}}" data-bs-toggle="modal" class="MainNavText" id="MainNavHelp" href="#myModal">{{$post->title}}</a>
                     </th>
                     <td>{{$post->description}}</td>
 
@@ -61,7 +61,7 @@
                     <td>{{$post->uname}}</td>
                     @endif
                     <td>
-                    {{date('d-m-Y', strtotime($post->created_at))}}
+                        {{date('d-m-Y', strtotime($post->created_at))}}
                     </td>
                     <td>{{date('d-m-Y', strtotime($post->updated_at))}}</td>
                     <td><a href="updatepost/{{$post->id}}">Edit</a></td>

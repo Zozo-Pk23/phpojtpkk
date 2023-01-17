@@ -12,7 +12,7 @@
                 <p class="fw-bolder">Title :</p>
             </div>
             <div class="col">
-                <input type="text" class="form-control" name="title" id="title" value="{{$post->title}}">
+                <input type="text" class="form-control" name="title" id="title" value="{{old('title', $post->title)}}">
                 @error('title')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -23,7 +23,7 @@
                 <p class="fw-bolder">Description :</p>
             </div>
             <div class="col">
-                <textarea class="form-control" name="des" id="des" cols="30" rows="10">{{$post->description}}</textarea>
+                <textarea class="form-control" name="des" id="des" cols="30" rows="10">{{old('description', $post->description)}}</textarea>
                 @error('des')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror

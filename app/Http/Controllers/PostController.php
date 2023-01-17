@@ -32,6 +32,7 @@ class PostController extends Controller
     public function index()
     {
         $loginUser = Auth::user()->type;
+        //dd($loginUser);
         $loginUserId = Auth::user()->id;
         if ($loginUser == 1) {
             $posts = DB::table('posts')
@@ -79,7 +80,7 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|unique:posts,title|max:255',
-            'des' =>  'required',
+            'des' =>  'required|max:255',
         ]);
         return view('posts/confirmpost', ['post' => $request]);
     }
@@ -116,8 +117,12 @@ class PostController extends Controller
     public function updateblade($id, Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|unique:posts,title|max:255',
             'des' =>  'required',
+            'title' => [
+                'required',
+                'unique:posts,title,'.$id,
+                'max:255'
+            ]
         ]);
 
         return view('posts.confirmupdate', ['post' => $request]);
@@ -152,7 +157,7 @@ class PostController extends Controller
      */
     public function download(Request $request)
     {
-        return Excel::download(new PostExport, 'user.csv');
+        return Excel::download(new PostExport, 'post.csv');
     }
     /**
      * Import csv to database

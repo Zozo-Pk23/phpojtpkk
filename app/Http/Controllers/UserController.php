@@ -6,6 +6,7 @@ use App\Http\Services\UserService;
 use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,9 +25,11 @@ class UserController extends Controller
      */
     public function index()
     {
+        $loginUser = Auth::user()->id;
         $users = DB::table('users')
-            ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at')
+            ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
+            ->where('users.id', '!=', $loginUser)
             ->where('users.deleted_at', '=', NULL)
             ->paginate(7);
         return view('users.users', ['users' => $users]);
@@ -52,18 +55,26 @@ class UserController extends Controller
      */
     public function createuser(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' =>  'required|email:rfc',
-            'password' => [
-                'required',
-                'same:confirmpassword',
-                'min:6',
-                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+        $validated = $request->validate(
+            [
+                'name' => 'required',
+                'email' =>  'required|email:rfc',
+                'password' => [
+                    'required',
+                    'same:confirmpassword',
+                    'min:8',
+                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+                ],
+                'confirmpassword' => 'required',
+                'profile' => 'required',
+                'date' => 'before:today'
             ],
-            'confirmpassword' => 'required',
-            'profile' => 'required'
-        ]);
+            [
+                'password.required' => 'fill the password please',
+                'password.min' => 'password must longer than 8 letters',
+                'password.regex' => 'password must include integer,uppercase,lowercase,sign'
+            ]
+        );
         if ($request->hasFile('profile')) {
             $file = $request->file('profile');
             $fname = $file->getClientOriginalName();
@@ -125,9 +136,11 @@ class UserController extends Controller
                     'same:password_confirmation'
                 ],
                 'password_confirmation' => 'required',
+            ], [
+                'newpassword.regex' => 'New must include integer,uppercase,lowercase,sign'
             ]);
             $this->userService->updatepassword($id, $request);
-            return redirect()->route('home');
+            return redirect('login')->with(Auth::logout());
         } else {
             return redirect()->back()->withErrors(['msg' => 'Reenter your old password!!!!']);;
         }

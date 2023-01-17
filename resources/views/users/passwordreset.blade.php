@@ -13,9 +13,9 @@
             </div>
             <div class="col">
                 <input type="password" class="form-control" name="oldpassword" id="oldpassword">
-                @error('oldpassword')
+                <!-- @error('oldpassword')
                 <div class="text-danger">{{ $message }}</div>
-                @enderror
+                @enderror -->
             </div>
         </div>
         <div class="row">
@@ -24,9 +24,9 @@
             </div>
             <div class="col">
                 <input type="password" class="form-control" name="newpassword" id="newpassword">
-                @error('newpassword')
+                <!-- @error('newpassword')
                 <div class="text-danger">{{ $message }}</div>
-                @enderror
+                @enderror -->
             </div>
         </div>
         <div class="row">
@@ -35,9 +35,9 @@
             </div>
             <div class="col">
                 <input type="password" class="form-control" name="password_confirmation" id="password_confirmation">
-                @error('password_confirmation')
+                <!-- @error('password_confirmation')
                 <div class="text-danger">{{ $message }}</div>
-                @enderror
+                @enderror -->
             </div>
         </div>
         <div class="row">

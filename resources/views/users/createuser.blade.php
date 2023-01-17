@@ -9,7 +9,7 @@
         <table class="table">
             <tr>
                 <td>Name</td>
-                <td><input type="text" class="form-control" name="name" id="name">
+                <td><input type="text" class="form-control" name="name" id="name" value="{{old('name')}}">
                     @error('name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <td>Email</td>
-                <td><input type="text" class="form-control" name="email" id="email">
+                <td><input type="text" class="form-control" name="email" id="email" value="{{old('email')}}">
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -25,15 +25,15 @@
             </tr>
             <tr>
                 <td>Password</td>
-                <td><input type="text" class="form-control" name="password" id="password">
+                <td><input type="password" class="form-control" name="password" id="password" value="{{old('password')}}">
                     @error('password')
-                    <div class="text-danger">{{ $message }}</div>
+                    <div class="text-danger" style="font-weight:bold">{{ $message }}</div>
                     @enderror
                 </td>
             </tr>
             <tr>
                 <td>Confirm Password</td>
-                <td><input type="text" class="form-control" name="confirmpassword" id="confirmpassword">
+                <td><input type="password" class="form-control" name="confirmpassword" id="confirmpassword" value="{{old('confirmpassword')}}">
                     @error('confirmpassword')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -43,7 +43,7 @@
             <tr>
                 <td>Type</td>
                 <td>
-                    <select class="form-control" name="type" id="type">
+                    <select class="form-control" name="type" id="type" value="{{old('type')}}">
                         <option value="0">Admin</option>
                         <option value="1">User</option>
                     </select>
@@ -51,19 +51,24 @@
             </tr>
             <tr>
                 <td>Phone</td>
-                <td><input type="text" class="form-control" name="phone" id="phone"></td>
+                <td><input type="text" class="form-control" name="phone" id="phone" value="{{old('phone')}}"></td>
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td><input type="date" class="form-control" name="date" id="date"></td>
+                <td><input type="date" class="form-control" name="date" id="date" value="{{old('date')}}">
+                    @error('date')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
+
             </tr>
             <tr>
                 <td>Address</td>
-                <td><textarea name="address" id="address" class="form-control" name="" id="" cols="30" rows="10"></textarea></td>
+                <td><textarea name="address" id="address" class="form-control" name="" id="" cols="30" rows="10">{{old('address')}}</textarea></td>
             </tr>
             <tr>
                 <td>Profile</td>
-                <td><input type="file" class="form-control" name="profile" id="profile">
+                <td><input type="file" class="form-control" name="profile" id="profile" value="{{old('profile')}}">
                     @error('profile')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror

@@ -32,32 +32,56 @@ class UserDao implements userDaoInterface
         $user = User::where('id', $id)->delete();
         return $user;
     }
-    public function searchuser($request)
-    {
-        //dd($request->createdfrom, $request->createdto);
-        $search = DB::table('users')
-            ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at')
-            ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
-            ->where('users.deleted_at', '=', NULL)
-            ->whereBetween('users.date_of_birth', [$request->createdfrom, $request->createdto])
-            ->where('users.name', 'LIKE', '%' . $request->searchitem . '%')
-            ->where('users.email', 'LIKE', '%' . $request->searchitem . '%')
-            ->paginate(10);
-        return $search;
-    }
     public function changepasswordscreen($id)
     {
-        //dd($id);
         $pass = User::where('id', $id)->first();
-        // $hashpassword=$pass->password;
-        // dd($hashpassword);
         return $pass;
     }
     public function updatepassword($id, $request)
     {
         $user = User::where('id', $id)->update([
-            'password' => $request->newpassword,
+            'password' => Hash::make($request->newpassword),
         ]);
+        return $user;
+    }
+    // public function searchuser($request)
+    // {
+    //     $users = \DB::table('users');
+    //     if ($request->searchname) {
+    //         $users = $users->where('name', 'LIKE', "%" . $request->searchname . "%");
+    //     }
+    //     if ($request->searchemail) {
+    //         $users = $users->where('email', 'LIKE', "%" . $request->searchemail . "%");
+    //     }
+    //     if ($request->min_age && $request->max_age) {
+    //         $users = $users->where('age', '>=', $request->min_age)
+    //             ->where('age', '<=', $request->max_age);
+    //     }
+    //     dd($users);
+    //     $users = $users->paginate(10);
+    //     return "Hello";
+    //     return view('users.users', ['users' => $users]);
+    // }
+    // public function searchuser($request)
+    // {
+    //     $loginUser = Auth::user()->id;
+    //     $users = DB::table('users')
+    //         ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
+    //         ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
+    //         ->where([
+    //             ['users.id', '!=', $loginUser],
+    //             ['users.deleted_at', '=', NULL],
+    //             ['users.name']
+    //         ])
+    //         ->paginate(7);
+    //     return $users;
+    // }
+    public function searchuser($request)
+    {
+        $from=$request->createdfrom;
+        $user = User::when(($from && $request->createdto), function ($query) {
+            $query->whereBetween('created_at', [$from, $request->createdto]);
+        })->get();
         return $user;
     }
 }
