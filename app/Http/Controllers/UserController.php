@@ -29,7 +29,6 @@ class UserController extends Controller
         $users = DB::table('users')
             ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
-            ->where('users.id', '!=', $loginUser)
             ->where('users.deleted_at', '=', NULL)
             ->paginate(7);
         return view('users.users', ['users' => $users]);
@@ -144,5 +143,68 @@ class UserController extends Controller
         } else {
             return redirect()->back()->withErrors(['msg' => 'Reenter your old password!!!!']);;
         }
+    }
+
+
+    /**
+     * Show post details
+     * 
+     * @param $id
+     * 
+     * @return $user
+     */
+    public function profile($id)
+    {
+        $users = $this->userService->profile($id);
+        return view('users.myprofile', ['user' => $users]);
+    }
+    /**
+     * Show user detail
+     * 
+     * @param $id
+     * 
+     * @return $user
+     * 
+     */
+    public function editProfile($id)
+    {
+        $users = $this->userService->profile($id);
+
+        return view('users.userupdateform', ['user' => $users]);
+    }
+    /**
+     * Validate Update Form
+     * 
+     * @param Request $request
+     * 
+     * @return $user,$fname
+     * 
+     */
+    public function confirmProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email:rfc',
+            'phone' => 'required',
+        ]);
+        if ($request->hasFile('profile')) {
+            $file = $request->file('profile');
+            $fname = $file->getClientOriginalName();
+            $file->move("images", $fname);
+        } else {
+            $fname = $request->oldprofile;
+        }
+        return view('users.userupdateconfirm', ['user' => $request, 'fname' => $fname]);
+    }
+    /**
+     * Final update user to database
+     * 
+     * @param $id,Request $request
+     * 
+     */
+    public function updateUser($id, Request $request)
+    {
+        $post = $this->userService->updateProfile($id, $request);
+        return redirect()->route('home');
     }
 }

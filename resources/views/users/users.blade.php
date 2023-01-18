@@ -6,19 +6,21 @@
     <div class="container justify-content-center text-center">
         <h1>User List</h1>
         <div class="row text-center">
-            <div class="col-10">
+            <div class="col-11">
                 <form action="/searchuser" method="post" class="row">
                     @csrf
                     <div class="col-2"><input type="text" class="form-control" name="searchname" id="searchname" placeholder="Name"></div>
                     <div class="col-2"><input type="text" class="form-control" name="searchemail" id="searchemail" placeholder="Email"></div>
-                    <div class="col-3"><input type="date" class="form-control" name="createdfrom" id="createdfrom"></div>
-                    <div class="col-3"><input type="date" class="form-control" name="createdto" id="createdto"></div>
-                    <div class="col-2">
+                    <div class="col-1">Created from:</div>
+                    <div class="col-2"><input type="date" class="form-control" name="createdfrom" id="createdfrom"></div>
+                    <div class="col-1">Created to:</div>
+                    <div class="col-2"><input type="date" class="form-control" name="createdto" id="createdto"></div>
+                    <div class="col-1">
                         <button class="btn btn-info text-white">Search</button>
                     </div>
                 </form>
             </div>
-            <div class="col-2">
+            <div class="col-1">
                 <a href="/createuser" class="btn btn-info text-white">Add</a>
             </div>
         </div>
@@ -49,7 +51,13 @@
                     <td>{{$user->address}}</td>
                     <td>{{$user->created_at}}</td>
                     <td>{{$user->updated_at}}</td>
-                    <td><button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Delete{{$user->id}}">Delete</button></td>
+
+                    <td>
+                        @if(auth()->user()->id!=$user->id)
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Delete{{$user->id}}">Delete</button>
+                        @endif
+                    </td>
+
                 </tr>
                 @endforeach
             </tbody>

@@ -47,23 +47,4 @@ class PostDao implements postDaoInterface
         $post = Post::where('id', $id)->delete();
         return $post;
     }
-    public function profile($id)
-    {
-        $user = User::where('id', $id)->first();
-        return $user;
-    }
-    public function updateProfile($id, $request)
-    {
-        // sdd($request);
-        $user = User::where('id', $id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'type' => $request->type,
-            'phone' => $request->phone,
-            'date_of_birth' => $request->date,
-            'address' => $request->address,
-            'profile' => $request->profile,
-        ]);
-        return $user;
-    }
 }

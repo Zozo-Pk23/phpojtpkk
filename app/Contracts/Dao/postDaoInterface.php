@@ -9,5 +9,4 @@ interface postDaoInterface
     public function edit($id);
     public function delete($id);
     public function update($id,$request);
-    public function profile($id);
 }

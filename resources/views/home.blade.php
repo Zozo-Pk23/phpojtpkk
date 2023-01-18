@@ -134,9 +134,16 @@
                                 </tr>
                                 <tr>
                                     <td>Status</td>
+                                    @if($post->status==1)
                                     <td>
-                                        {{$post->status}}
+                                        Active
                                     </td>
+                                    @else
+                                    <td>
+                                        Not Active
+                                    </td>
+                                    @endif
+
                                 </tr>
                                 <tr>
                                     <td>Crated At</td>

@@ -32,12 +32,4 @@ class PostService implements postInterface
     {
         return $this->PostDao->delete($id);
     }
-    public function profile($id)
-    {
-        return $this->PostDao->profile($id);
-    }
-    public function updateProfile($id, $request)
-    {
-        return $this->PostDao->updateProfile($id, $request);
-    }
 }

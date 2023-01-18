@@ -13,7 +13,7 @@
         <input type="hidden" name="profile" value="{{$user->profile}}">
         <input type="hidden" name="date_of_birth" value="{{$user->date_of_birth}}">
         <input type="hidden" name="address" value="{{$user->address}}"> -->
-        <table class="table">
+        <table class="table" style="width: 60%;margin:0 auto;">
             <tr>
                 <td>Name</td>
                 <td>{{$user->name}}</td>
@@ -44,9 +44,13 @@
                 <td>Address</td>
                 <td>{{$user->address}}</td>
             </tr>
-
+            <tr>
+                <td></td>
+                <td>
+                    <button class="btn btn-warning text-white">Edit</button>
+                </td>
+            </tr>
         </table>
-        <button class="btn btn-info text-white">Edit</button>
     </div>
 
 </form>
