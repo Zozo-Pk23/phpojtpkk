@@ -49,8 +49,8 @@
                     <td>{{$user->phone}}</td>
                     <td>{{date('Y/m/d', strtotime($user->date_of_birth))}}</td>
                     <td>{{$user->address}}</td>
-                    <td>{{$user->created_at}}</td>
-                    <td>{{$user->updated_at}}</td>
+                    <td>{{date('Y/m/d', strtotime($user->created_at))}}</td>
+                    <td>{{date('Y/m/d', strtotime($user->updated_at))}}</td>
 
                     <td>
                         @if(auth()->user()->id!=$user->id)

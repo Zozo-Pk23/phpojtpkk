@@ -30,7 +30,7 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <a href="{{ route('home') }}"><button class="btn btn-default bg-white">Cancel</button></a>
+                        <a href="javascript:history.back()">Cancel</a>
                     </div>
                     <div class="col">
                         <input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm">

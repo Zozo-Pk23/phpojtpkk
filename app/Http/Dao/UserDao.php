@@ -68,17 +68,21 @@ class UserDao implements userDaoInterface
     {
         $startdate = $request->createdfrom;
         $enddate = $request->createdto;
-        $users = User::when($request->createdfrom, function ($query) use ($request) {
-            $query->whereDate('created_at', '>=', $request->createdfrom);
-        })
+        $users = DB::table('users')
+            ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
+            ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
+            ->where('users.deleted_at', '=', NULL)
+            ->when($request->createdfrom, function ($query) use ($request) {
+                $query->whereDate('users.created_at', '>=', $request->createdfrom);
+            })
             ->when($request->createdto, function ($query) use ($request) {
-                $query->whereDate('created_at', '<=', $request->createdto);
+                $query->whereDate('users.created_at', '<=', $request->createdto);
             })
             ->when($request->searchemail, function ($query) use ($request) {
-                $query->where('email', 'LIKE', "%" . $request->searchemail . "%");
+                $query->where('users.email', 'LIKE', "%" . $request->searchemail . "%");
             })
             ->when($request->searchname, function ($query) use ($request) {
-                $query->where('name', 'LIKE', "%" . $request->searchname . "%");
+                $query->where('users.name', 'LIKE', "%" . $request->searchname . "%");
             })
             ->paginate(7);
         return $users;

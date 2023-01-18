@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\Failure;
 
 class PostController extends Controller
 {
@@ -41,6 +42,7 @@ class PostController extends Controller
                 ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
                 ->where('posts.deleted_at', '=', NULL)
                 ->where('posts.created_user_id', '=', $loginUserId)
+                ->orderByDesc('posts.created_at')
                 ->paginate(10);
 
             return view('home', ['posts' => $posts, 'type' => $loginUser]);
@@ -50,6 +52,7 @@ class PostController extends Controller
                 ->join('users', 'users.id', '=', 'posts.created_user_id')
                 ->join('users as uone', 'uone.id', '=', 'posts.updated_user_id')
                 ->where('posts.deleted_at', '=', NULL)
+                ->orderByDesc('posts.created_at')
                 ->paginate(50);
             // dd($posts);
             return view('home', ['posts' => $posts, 'type' => $loginUser]);
@@ -120,7 +123,7 @@ class PostController extends Controller
             'des' =>  'required',
             'title' => [
                 'required',
-                'unique:posts,title,'.$id,
+                'unique:posts,title,' . $id,
                 'max:255'
             ]
         ]);
@@ -171,16 +174,14 @@ class PostController extends Controller
             'file' => 'required|mimes:csv|max:2080'
         ]);
         $file = $request->file('file');
-        Excel::import(new PostImport, $file);
-        return redirect()->route('home');
+        if ($request->file('file')) {
+            try {
+                Excel::import(new PostImport, $file);
+                return redirect('home');
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                $messages = $e->failures();
+                return redirect()->back()->with('messages', $messages);
+            }
+        }
     }
-
-
-
-
-
-    //User
-
-
-
 }

@@ -30,6 +30,7 @@ class UserController extends Controller
             ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
             ->where('users.deleted_at', '=', NULL)
+            ->orderByDesc('users.created_at')
             ->paginate(7);
         return view('users.users', ['users' => $users]);
     }

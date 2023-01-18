@@ -64,18 +64,8 @@
                         {{date('d-m-Y', strtotime($post->created_at))}}
                     </td>
                     <td>{{date('d-m-Y', strtotime($post->updated_at))}}</td>
-                    <td><a href="updatepost/{{$post->id}}">Edit</a></td>
+                    <td><a href="updatepost/{{$post->id}}" class="btn btn-warning btn-sm">Edit</a></td>
                     <td>
-                        <!-- <a href="">
-                            <form id="delete-form" method="POST" action="delete/{{$post->id}}">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-
-                                <div class="form-group">
-                                    <button type="submit" onclick="return confirm('Are You Sure Want To Delete')" class="delete-user">delete</button>
-                                </div>
-                            </form>
-                        </a> -->
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Delete{{$post->id}}">Delete</button>
                     </td>
                 </tr>
@@ -148,13 +138,13 @@
                                 <tr>
                                     <td>Crated At</td>
                                     <td>
-                                        {{$post->created_at}}
+                                        {{date('d-m-Y', strtotime($post->created_at))}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Update At</td>
                                     <td>
-                                        {{$post->updated_at}}
+                                        {{date('d-m-Y', strtotime($post->updated_at))}}
                                     </td>
                                 </tr>
                             </table>

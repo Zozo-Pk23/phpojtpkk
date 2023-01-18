@@ -26,7 +26,7 @@ Route::get('/home', [PostController::class, 'index'])->name('home');
 
 Route::get('/createpost', function () {
     return view('posts/createpost');
-});
+})->name('createpost');
 Route::get('/updatepost/{id}', [PostController::class, 'edit'])->name('updatepost');
 Route::post('create', [PostController::class, 'save']);
 Route::post('confirm', [PostController::class, 'confirm']);

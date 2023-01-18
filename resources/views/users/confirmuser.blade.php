@@ -55,7 +55,7 @@
                 <div class="col">{{$user->address}}</div>
             </div>
             <div class="row my-3">
-                <div class="col"> <a href="/createuser" class="btn btn-primary">Cancel</a></div>
+                <div class="col"> <a href="javascript:history.back()" class="btn btn-primary">Cancel</a></div>
                 <div class="col"><input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm"></div>
             </div>
         </div>

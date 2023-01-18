@@ -7,20 +7,13 @@
         @csrf
         <div class="bg-white" style="padding: 20px;">
             <input type="file" class="col-12 form-control" name="file">
-            @if(count($errors->getMessages()) > 0)
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <strong>Validation Errors:</strong>
-                <ul>
-                    @foreach($errors->getMessages() as $errorMessages)
-                    @foreach($errorMessages as $errorMessage)
-                    <li>
-                        {{ $errorMessage }}
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    </li>
-                    @endforeach
-                    @endforeach
-                </ul>
-            </div>@endif
+            @if(Session::has('messages'))
+            @foreach(Session::get('messages') as $message)
+            <div class="alert alert-danger" role="alert">
+                {{$message->errors()[0]}} at line No-  {{$message->row()}}
+            </div>
+            @endforeach
+            @endif
             <button class="btn btn-success my-5">Upload</button>
         </div>
     </form>

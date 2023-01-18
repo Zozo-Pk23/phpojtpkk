@@ -51,7 +51,7 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <a href="/updatepost/{{$post->id}}" class="btn btn-primary">Cancel</a>
+                        <a href="javascript:history.back()" class="btn btn-primary">Cancel</a>
                     </div>
                     <div class="col">
                         <input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm">
