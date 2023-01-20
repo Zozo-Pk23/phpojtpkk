@@ -21,14 +21,14 @@ class PostExport implements FromCollection, WithHeadings
             $posts = DB::table('posts')
                 ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at',)
                 ->join('users', 'users.id', '=', 'posts.created_user_id')
-                ->where('posts.deleted_at', '=', NULL)
+                ->where('posts.delete_flag', '=', 0)
                 ->get();
             return $posts;
         } else {
             $posts = DB::table('posts')
                 ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'posts.created_at',)
                 ->join('users', 'users.id', '=', 'posts.created_user_id')
-                ->where('posts.deleted_at', '=', NULL)
+                ->where('posts.delete_flag', '=', 0)
                 ->where('posts.created_user_id', '=', $loginUserId)
                 ->get();
             return $posts;

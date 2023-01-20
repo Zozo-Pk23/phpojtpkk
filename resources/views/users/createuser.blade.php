@@ -115,10 +115,8 @@
     $(document).ready(function(e) {
 
 
-        $('#profile').click(function() {
-            document.getElementById('profile');
-            Get value: $(selector).val()
-            Set value: $(selector).val(value)
+        $('#profile').change(function() {
+
             let reader = new FileReader();
 
             reader.onload = (e) => {

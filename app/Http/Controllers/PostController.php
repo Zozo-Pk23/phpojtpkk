@@ -62,7 +62,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => [
                 'required',
-                'unique:posts,title,NULL,id,deleted_at,NULL',
+                'unique:posts,title,NULL,id,delete_flag,0',
                 'max:255',
             ],
             'des' =>  'required|max:255',
