@@ -20,6 +20,7 @@ class PostSeeder extends Seeder
             'title' => 'About Us',
             'description' => 'This is about pkk',
             'status' => 1,
+            'delete_flag'=>0,
             'created_user_id' => 1,
             'updated_user_id' => 1,
             'created_at' => Carbon::now(),

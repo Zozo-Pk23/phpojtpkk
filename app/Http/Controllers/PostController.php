@@ -33,30 +33,8 @@ class PostController extends Controller
     public function index()
     {
         $loginUser = Auth::user()->type;
-        //dd($loginUser);
-        $loginUserId = Auth::user()->id;
-        if ($loginUser == 1) {
-            $posts = DB::table('posts')
-                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.updated_at', 'posts.status',)
-                ->leftJoin('users', 'users.id', '=', 'posts.created_user_id')
-                ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
-                ->where('posts.deleted_at', '=', NULL)
-                ->where('posts.created_user_id', '=', $loginUserId)
-                ->orderByDesc('posts.created_at')
-                ->paginate(10);
-
-            return view('home', ['posts' => $posts, 'type' => $loginUser]);
-        } else {
-            $posts = DB::table('posts')
-                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.updated_at', 'posts.status')
-                ->join('users', 'users.id', '=', 'posts.created_user_id')
-                ->join('users as uone', 'uone.id', '=', 'posts.updated_user_id')
-                ->where('posts.deleted_at', '=', NULL)
-                ->orderByDesc('posts.created_at')
-                ->paginate(50);
-            // dd($posts);
-            return view('home', ['posts' => $posts, 'type' => $loginUser]);
-        }
+        $posts = $this->postService->index();
+        return view('home', ['posts' => $posts, 'type' => $loginUser]);
     }
     /**
      * search post
@@ -82,7 +60,11 @@ class PostController extends Controller
     public function confirm(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|unique:posts,title|max:255',
+            'title' => [
+                'required',
+                'unique:posts,title,NULL,id,deleted_at,NULL',
+                'max:255',
+            ],
             'des' =>  'required|max:255',
         ]);
         return view('posts/confirmpost', ['post' => $request]);

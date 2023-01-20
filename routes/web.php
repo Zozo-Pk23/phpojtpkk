@@ -30,7 +30,7 @@ Route::get('/createpost', function () {
 Route::get('/updatepost/{id}', [PostController::class, 'edit'])->name('updatepost');
 Route::post('create', [PostController::class, 'save']);
 Route::post('confirm', [PostController::class, 'confirm']);
-Route::post('/search', [PostController::class, 'search']);
+Route::get('/search', [PostController::class, 'search']);
 Route::post('/updateblade/{id}', [PostController::class, 'updateblade'])->name('updateblade');
 Route::post('/update/{id}', [PostController::class, 'update'])->name('update');
 Route::delete('/delete/{id}', [PostController::class, 'delete']);
@@ -58,6 +58,6 @@ Route::get('/edit_profile/{id}', [UserController::class, 'editProfile']);
 Route::post('/confirm_profile', [UserController::class, 'confirmProfile']);
 Route::post('/updateuser/{id}', [UserController::class, 'updateUser']);
 
-Route::get('/changepasswordscreen/{id}', [UserController::class, 'changepasswordscreen'])->name('changepasswordscreen');
+Route::get('/changepassword/{id}', [UserController::class, 'findUserById'])->name('changepasswordscreen');
 Route::post('/updatepassword/{id}', [UserController::class, 'updatepassword']);
 Route::get('forgotpassword', [UserController::class, 'forgotpassword']);

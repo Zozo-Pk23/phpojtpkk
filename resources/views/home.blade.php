@@ -5,10 +5,10 @@
     @csrf
     <div class="row justify-content-center">
         <div class="row justify-content-center my-5">
-            <form action="/search" method="post" class="col-6 row">
+            <form action="/home" method="get" class="col-6 row">
                 @csrf
                 <div class="col-8 text-center"><input type="text" placeholder="Search title or description" class="form-control" name="searchitem" id="searchitem"></div>
-                <button class="btn btn-info col-4">Search</button>
+                <button type="submit" class="btn btn-info col-4">Search</button>
             </form>
             <div class="col-2 text-center"><a href="/upload" class="btn btn-info form-control">Upload</a></div>
             <form action="/download" method="post" class="col-2 text-center">
@@ -74,7 +74,7 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-center">
-            {!! $posts->links() !!}
+            {!! $posts->appends(Request::except('search'))->links() !!}
         </div>
         @foreach($posts as $post)
         <div class="modal" tabindex="-1" id="Delete{{$post->id}}">

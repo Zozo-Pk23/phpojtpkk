@@ -10,6 +10,34 @@ use Illuminate\Support\Facades\Hash;
 
 class UserDao implements userDaoInterface
 {
+    public function index()
+    {
+
+        $users = DB::table('users')->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
+            ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
+            ->where('users.delete_flag', 0)
+            ->where(function ($query) {
+                $name = request()->input('searchname');
+                $email = request()->input('searchemail');
+                $startdate = request()->input('createdfrom');
+                $enddate = request()->input('createdto');
+                $query
+                    ->when($name, function ($qry) use ($name) {
+                        $qry->where('users.name', 'LIKE', "%" . $name . " %");
+                    })
+                    ->when($startdate, function ($qry) use ($startdate) {
+                        $qry->whereDate('users.created_at', '>=', $startdate);
+                    })
+                    ->when($enddate, function ($query) use ($enddate) {
+                        $query->whereDate('users.created_at', '<=', $enddate);
+                    })
+                    ->when($email, function ($query) use ($email) {
+                        $query->where('users.email', 'LIKE', "%" . $email . "%");
+                    });
+            })
+            ->paginate(7);
+        return $users;
+    }
     public function save($request)
     {
         $id = Auth::user()->id;
@@ -29,23 +57,22 @@ class UserDao implements userDaoInterface
     }
     public function deleteuser($id)
     {
-        $user = User::where('id', $id)->delete();
+        $user = User::where('id', $id)->update([
+            'delete_flag' => 1
+        ]);
+        //$user = User::where('id', $id)->delete();
         return $user;
-    }
-    public function changepasswordscreen($id)
-    {
-        $pass = User::where('id', $id)->first();
-        return $pass;
     }
     public function updatepassword($id, $request)
     {
+
         $user = User::where('id', $id)->update([
             'password' => Hash::make($request->newpassword),
         ]);
         return $user;
     }
 
-    public function profile($id)
+    public function findUserById($id)
     {
         $user = User::where('id', $id)->first();
         return $user;
@@ -63,28 +90,5 @@ class UserDao implements userDaoInterface
             'profile' => $request->profile,
         ]);
         return $user;
-    }
-    public function searchuser($request)
-    {
-        $startdate = $request->createdfrom;
-        $enddate = $request->createdto;
-        $users = DB::table('users')
-            ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
-            ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
-            ->where('users.deleted_at', '=', NULL)
-            ->when($request->createdfrom, function ($query) use ($request) {
-                $query->whereDate('users.created_at', '>=', $request->createdfrom);
-            })
-            ->when($request->createdto, function ($query) use ($request) {
-                $query->whereDate('users.created_at', '<=', $request->createdto);
-            })
-            ->when($request->searchemail, function ($query) use ($request) {
-                $query->where('users.email', 'LIKE', "%" . $request->searchemail . "%");
-            })
-            ->when($request->searchname, function ($query) use ($request) {
-                $query->where('users.name', 'LIKE', "%" . $request->searchname . "%");
-            })
-            ->paginate(7);
-        return $users;
     }
 }

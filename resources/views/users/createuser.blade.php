@@ -27,7 +27,7 @@
                 <td>Password</td>
                 <td><input type="password" class="form-control" name="password" id="password" value="{{old('password')}}">
                     @error('password')
-                    <div class="text-danger" style="font-weight:bold">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </td>
             </tr>
@@ -55,7 +55,7 @@
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td><input type="date" class="form-control" name="date" id="date" value="{{old('date')}}">
+                <td><input type="date" max="<?= date('Y-m-d'); ?>" class="form-control" name="date" id="date" value="{{old('date')}}">
                     @error('date')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -75,9 +75,21 @@
                 </td>
             </tr>
             <tr>
-                <td></td>
                 <td>
-                    <img id="preview-image-before-upload" src="https://www.riobeauty.co.uk/images/product_image_not_found.gif" alt="preview image" style="max-height: 250px;">
+
+
+
+                </td>
+                <td>
+
+                    @php
+                    $userid=Auth::user()->id;
+                    $images=DB::table('users')->where('id',$userid)->first();
+                    $image=explode('|',$images->profile);
+                    @endphp
+                    @foreach($image as $item)
+                    <img id="preview-image-before-upload" src="/public/images/{{$item}}" style="max-height: 250px;">
+                    @endforeach
                 </td>
             </tr>
             <tr>
@@ -103,8 +115,10 @@
     $(document).ready(function(e) {
 
 
-        $('#profile').change(function() {
-
+        $('#profile').click(function() {
+            document.getElementById('profile');
+            Get value: $(selector).val()
+            Set value: $(selector).val(value)
             let reader = new FileReader();
 
             reader.onload = (e) => {

@@ -4,7 +4,7 @@
     @csrf
     <div class="container" style="width: 40%;">
         <h1>Change Passsword</h1>
-        <div class="row">
+        <div class="row my-5">
             @if($errors->any())
             <h4 class="text-danger">{{$errors->first()}}</h4>
             @endif
@@ -18,7 +18,7 @@
                 @enderror -->
             </div>
         </div>
-        <div class="row">
+        <div class="row my-5">
             <div class="col">
                 <p>New Password :</p>
             </div>
@@ -29,7 +29,7 @@
                 @enderror -->
             </div>
         </div>
-        <div class="row">
+        <div class="row my-5">
             <div class="col">
                 <p>Confirm Password :</p>
             </div>
@@ -40,7 +40,7 @@
                 @enderror -->
             </div>
         </div>
-        <div class="row">
+        <div class="row my-5">
             <div class="col">
                 <button class="form-control btn-white" onclick="document.getElementById('oldpassword').value=null;
                 document.getElementById('newpassword').value=null;

@@ -12,6 +12,10 @@ class UserService implements userInterface
     {
         $this->UserDao = $userDao;
     }
+    public function index()
+    {
+        return $this->UserDao->index();
+    }
     public function save($request)
     {
         return $this->UserDao->save($request);
@@ -20,22 +24,13 @@ class UserService implements userInterface
     {
         return $this->UserDao->deleteuser($id);
     }
-
-    public function searchuser($request)
-    {
-        return $this->UserDao->searchuser($request);
-    }
-    public function changepasswordscreen($id)
-    {
-        return $this->UserDao->changepasswordscreen($id);
-    }
     public function updatepassword($id, $request)
     {
         return $this->UserDao->updatepassword($id, $request);
     }
-    public function profile($id)
+    public function findUserById($id)
     {
-        return $this->UserDao->profile($id);
+        return $this->UserDao->findUserById($id);
     }
     public function updateProfile($id, $request)
     {

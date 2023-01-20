@@ -34,7 +34,7 @@ class PostImport implements ToCollection, WithValidation, WithHeadingRow
         foreach ($rows as $row) {
             Post::create([
                 'title' => $row['title'],
-                'descripption' => $row['description'],
+                'description' => $row['description'],
                 'status' => 1,
                 'created_user_id' => Auth::user()->id,
                 'updated_user_id' => Auth::user()->id,

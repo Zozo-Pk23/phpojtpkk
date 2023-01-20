@@ -25,25 +25,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $loginUser = Auth::user()->id;
-        $users = DB::table('users')
-            ->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
-            ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
-            ->where('users.deleted_at', '=', NULL)
-            ->orderByDesc('users.created_at')
-            ->paginate(7);
-        return view('users.users', ['users' => $users]);
-    }
-    /**
-     * Search user
-     * 
-     * @param Request $request
-     * 
-     * @return $users
-     */
-    public function search(Request $request)
-    {
-        $users = $this->userService->searchuser($request);
+        $users = $this->userService->index();
         return view('users.users', ['users' => $users]);
     }
     /**
@@ -55,6 +37,11 @@ class UserController extends Controller
      */
     public function createuser(Request $request)
     {
+        if ($request->hasFile('profile')) {
+            $file = $request->file('profile');
+            $fname = $file->getClientOriginalName();
+            $file->move("images", $fname);
+        }
         $validated = $request->validate(
             [
                 'name' => 'required',
@@ -67,7 +54,7 @@ class UserController extends Controller
                 ],
                 'confirmpassword' => 'required',
                 'profile' => 'required',
-                'date' => 'before:today'
+                'date' => 'nullable|before:today'
             ],
             [
                 'password.required' => 'fill the password please',
@@ -75,11 +62,7 @@ class UserController extends Controller
                 'password.regex' => 'password must include integer,uppercase,lowercase,sign'
             ]
         );
-        if ($request->hasFile('profile')) {
-            $file = $request->file('profile');
-            $fname = $file->getClientOriginalName();
-            $file->move("images", $fname);
-        }
+
         return view('users.confirmuser', ['user' => $request, 'fname' => $fname]);
     }
     /**
@@ -111,9 +94,9 @@ class UserController extends Controller
      * 
      * @return $password
      */
-    public function changepasswordscreen($id)
+    public function findUserById($id)
     {
-        $password = $this->userService->changepasswordscreen($id);
+        $password = $this->userService->findUserById($id);
         return view('users.passwordreset', ['password' => $password]);
     }
     /**
@@ -142,7 +125,7 @@ class UserController extends Controller
             $this->userService->updatepassword($id, $request);
             return redirect('login')->with(Auth::logout());
         } else {
-            return redirect()->back()->withErrors(['msg' => 'Reenter your old password!!!!']);;
+            return redirect()->back()->withErrors(['msg' => 'Re enter your old password!!!!']);;
         }
     }
 
@@ -156,7 +139,7 @@ class UserController extends Controller
      */
     public function profile($id)
     {
-        $users = $this->userService->profile($id);
+        $users = $this->userService->findUserById($id);
         return view('users.myprofile', ['user' => $users]);
     }
     /**
@@ -169,8 +152,7 @@ class UserController extends Controller
      */
     public function editProfile($id)
     {
-        $users = $this->userService->profile($id);
-
+        $users = $this->userService->findUserById($id);
         return view('users.userupdateform', ['user' => $users]);
     }
     /**
@@ -205,7 +187,7 @@ class UserController extends Controller
      */
     public function updateUser($id, Request $request)
     {
-        $post = $this->userService->updateProfile($id, $request);
+        $this->userService->updateProfile($id, $request);
         return redirect()->route('home');
     }
 }

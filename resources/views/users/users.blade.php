@@ -7,7 +7,7 @@
         <h1>User List</h1>
         <div class="row text-center">
             <div class="col-11">
-                <form action="/searchuser" method="post" class="row">
+                <form action="/users" method="get" class="row">
                     @csrf
                     <div class="col-2"><input type="text" class="form-control" name="searchname" id="searchname" placeholder="Name"></div>
                     <div class="col-2"><input type="text" class="form-control" name="searchemail" id="searchemail" placeholder="Email"></div>

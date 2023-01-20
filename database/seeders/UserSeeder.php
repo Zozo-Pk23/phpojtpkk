@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
             'email' => 'scm.phyokhantkyaw@gmail.com',
             'password' => Hash::make('password'),
             'profile' => 'pkk.jpg',
+            'delete_flag'=>0,
             'type' => 0,
             'created_user_id' => 1,
             'updated_user_id' => 1,

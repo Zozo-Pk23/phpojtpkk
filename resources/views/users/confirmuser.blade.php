@@ -35,7 +35,7 @@
             <div class="row my-3">
                 <div class="col">Type</div>
                 <div class="col">
-                    @if($user->type=='0')
+                    @if($user->type==0)
                     User
                     @else
                     Admin

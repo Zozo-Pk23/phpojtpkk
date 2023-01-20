@@ -12,6 +12,10 @@ class PostService implements postInterface
     {
         $this->PostDao = $postDao;
     }
+    public function index()
+    {
+        return $this->PostDao->index();
+    }
     public function create($request)
     {
         return $this->PostDao->create($request);

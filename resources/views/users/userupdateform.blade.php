@@ -33,8 +33,13 @@
                 <td>Type</td>
                 <td>
                     <select class="form-control" name="type" id="type" value="{{$user->type}}">
+                        @if($user->type == 0)
                         <option value="0">Admin</option>
                         <option value="1">User</option>
+                        @else
+                        <option value="1">User</option>
+                        <option value="0">Admin</option>
+                        @endif
                     </select>
                 </td>
             </tr>
@@ -65,7 +70,7 @@
                 </td>
             </tr>
             <tr>
-                <td><a href="/changepasswordscreen/{{$user->id}}">Change your password</a></td>
+                <td><a href="/changepassword/{{$user->id}}">Change your password</a></td>
             </tr>
             <tr>
                 <td><input type="button" class="form-control bg-light fw-bolder text-primary" value="Clear" onclick="document.getElementById('name').value = null;document.getElementById('email').value = null;

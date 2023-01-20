@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('profile');
+            $table->integer('delete_flag')->default(0);
             $table->string('type')->default(1);
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
@@ -32,7 +33,7 @@ return new class extends Migration
             $table->rememberToken()->nullable();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
-           $table->timestamp('deleted_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

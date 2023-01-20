@@ -7,29 +7,39 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\Input;
 
 class PostDao implements postDaoInterface
 {
+    public function index()
+    {
+        $loginUser = Auth::user()->type;
+        $loginUserId = Auth::user()->id;
+        $q = request()->input('searchitem');
+        if ($loginUser == 1) {
+            $posts = DB::table('posts')->where('posts.delete_flag', 0)->where('posts.created_user_id', $loginUserId)->where(function ($qry) {
+                $searchitem = request()->input('searchitem');
+                $qry->where("title", "LIKE", "%{$searchitem}%")->orWhere("description", "LIKE", "%{$searchitem}%");
+            })->paginate(10);
+            return $posts;
+        } else if ($loginUser == 0) {
+            $posts = DB::table('posts')
+                ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.status', 'posts.updated_at',)
+                ->leftjoin('users', 'users.id', '=', 'posts.created_user_id')
+                ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
+                ->where('posts.delete_flag', '=', '0')->where(function ($query) {
+                    $searchitem = request()->input('searchitem');
+                    $query->where("title", "LIKE", "%{$searchitem}%")->orWhere("description", "LIKE", "%{$searchitem}%");
+                })
+                ->paginate(10);
+            return $posts;
+        }
+    }
     public function create($request)
     {
         $id = Auth::user()->id;
-        //dd($id);
         $user =  Post::create(['title' => $request['title'], 'description' => $request['des'], "created_user_id" => $id, "updated_user_id" => $id]);
         return $user;
-    }
-    public function search($request)
-    {
-        $id = Auth::user()->id;
-        $search = DB::table('posts')
-            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.status', 'posts.updated_at',)
-            ->join('users', 'users.id', '=', 'posts.created_user_id')
-            ->where('posts.title', 'LIKE', '%' . $request->searchitem . '%')
-            ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
-            ->orWhere('posts.description', 'LIKE', '%' . $request->searchitem . '%')
-            ->paginate(10);
-
-        //dd($search);
-        return $search;
     }
     public function edit($id)
     {
@@ -44,7 +54,9 @@ class PostDao implements postDaoInterface
     }
     public function delete($id)
     {
-        $post = Post::where('id', $id)->delete();
+        $post = Post::where('id', $id)->update([
+            'delete_flag' => 1
+        ]);
         return $post;
     }
 }

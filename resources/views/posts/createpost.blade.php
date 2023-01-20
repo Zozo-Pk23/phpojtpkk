@@ -21,7 +21,7 @@
                 <p class="fw-bolder">Description :</p>
             </div>
             <div class="col">
-                <textarea class="form-control" name="des" id="des" cols="30" rows="10"> {{old('description')}}</textarea>
+                <textarea class="form-control" name="des" id="des" cols="30" rows="10" value="{{old('des')}}"> {{old('des')}}</textarea>
                 @error('des')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
