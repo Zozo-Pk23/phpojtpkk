@@ -106,21 +106,21 @@ class UserController extends Controller
      */
     public function updatepassword($id, Request $request)
     {
+        $validated = $request->validate([
+            'oldpassword' => 'required',
+            'newpassword' =>  [
+                'required',
+                'min:8',
+                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9]).*$/',
+                'same:password_confirmation'
+            ],
+            'password_confirmation' => 'required',
+        ], [
+            'newpassword.regex' => 'New must include integer,uppercase,lowercase,sign'
+        ]);
         $old = User::where('id', $id)->first();
         $typepass = $request->oldpassword;
         if (Hash::check($typepass, $old->password)) {
-            $validated = $request->validate([
-                'oldpassword' => 'required',
-                'newpassword' =>  [
-                    'required',
-                    'min:8',
-                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9]).*$/',
-                    'same:password_confirmation'
-                ],
-                'password_confirmation' => 'required',
-            ], [
-                'newpassword.regex' => 'New must include integer,uppercase,lowercase,sign'
-            ]);
             $this->userService->updatepassword($id, $request);
             return redirect('login')->with(Auth::logout());
         } else {
@@ -167,7 +167,6 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email:rfc',
-            'phone' => 'required',
         ]);
         if ($request->hasFile('profile')) {
             $file = $request->file('profile');

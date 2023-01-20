@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\Failure;
 
@@ -62,7 +63,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => [
                 'required',
-                'unique:posts,title,NULL,id,delete_flag,0',
+                Rule::unique('posts', 'title')->ignore(1, 'posts.delete_flag'),
                 'max:255',
             ],
             'des' =>  'required|max:255',
@@ -105,7 +106,7 @@ class PostController extends Controller
             'des' =>  'required',
             'title' => [
                 'required',
-                'unique:posts,title,' . $id,
+                Rule::unique('posts', 'title')->ignore(1, 'posts.delete_flag'),
                 'max:255'
             ]
         ]);

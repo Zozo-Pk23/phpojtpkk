@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <td>Name</td>
-                <td><input type="text" class="form-control" name="name" id="name" value="{{$user->name}}">
+                <td><input type="text" class="form-control" name="name" id="name" value="{{old('name',$user->name)}}">
                     @error('name')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <td>Email</td>
-                <td><input type="text" class="form-control" name="email" id="email" value="{{$user->email}}">
+                <td><input type="text" class="form-control" name="email" id="email" value="{{old('email',$user->email)}}">
                     @error('email')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -32,20 +32,20 @@
             <tr>
                 <td>Type</td>
                 <td>
-                    <select class="form-control" name="type" id="type" value="{{$user->type}}">
-                        @if($user->type == 0)
-                        <option value="0">Admin</option>
-                        <option value="1">User</option>
-                        @else
-                        <option value="1">User</option>
-                        <option value="0">Admin</option>
-                        @endif
+                    <select name="type" class="form-control">
+                        <option value="1" {{ old('type') == 1 ? 'selected' : '' }}>
+                            User
+                        </option>
+                        <option value="0" {{ old('type') == 0 ? 'selected' : '' }}>
+                            Admin
+                        </option>
                     </select>
+
                 </td>
             </tr>
             <tr>
                 <td>Phone</td>
-                <td><input type="text" class="form-control" name="phone" id="phone" value="{{$user->phone}}">
+                <td><input type="text" class="form-control" name="phone" id="phone" value="{{old('phone',$user->phone)}}">
                     @error('phone')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -53,11 +53,15 @@
             </tr>
             <tr>
                 <td>Date of Birth</td>
-                <td><input type="date" class="form-control" name="date" id="date" value="{{$user->date_of_birth}}"></td>
+                <td><input type="date" max="<?= date('Y-m-d'); ?>" class="form-control" name="date" id="date" value="{{old('date',$user->date_of_birth)}}">
+                    @error('date')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </td>
             </tr>
             <tr>
                 <td>Address</td>
-                <td><textarea name="address" id="address" class="form-control" name="" id="" cols="30" rows="10">{{$user->address}}</textarea></td>
+                <td><textarea name="address" id="address" class="form-control" name="" id="" cols="30" rows="10">{{old('address',$user->address)}}</textarea></td>
             </tr>
             <tr>
                 <td>Profile</td>
@@ -87,22 +91,30 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function(e) {
+    document.querySelector('#profile').addEventListener('change', function() {
+        const reader = new FileReader();
 
-
-        $('#profile').change(function() {
-
-            let reader = new FileReader();
-
-            reader.onload = (e) => {
-
-                $('#preview-image-before-upload').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(this.files[0]);
-
+        reader.addEventListener('load', () => {
+            localStorage.setItem('image', reader.result);
         });
 
+        reader.readAsDataURL(this.files[0]);
+    })
+    document.addEventListener("DOMContentLoaded", () => {
+        const recentimage = localStorage.getItem('image', );
+        if (recentimage) {
+            document.querySelector('#preview-image-before-upload').setAttribute('src', recentimage);
+        }
+    });
+
+    $(document).ready(function(e) {
+        $('#profile').change(function() {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                $('#preview-image-before-upload').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
     });
 </script>
 @endsection

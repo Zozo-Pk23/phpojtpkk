@@ -30,7 +30,15 @@
             </div>
             <div class="row my-3">
                 <div class="col">Type</div>
-                <div class="col">{{$user->type}}</div>
+                <div class="col">
+                    <td>
+                        @if($user->type==0)
+                        Admin
+                        @else
+                        User
+                        @endif
+                    </td>
+                </div>
             </div>
             <div class="row my-3">
                 <div class="col">Phone</div>
@@ -47,7 +55,7 @@
 
             <div class="row my-3">
                 <div class="col"><a href="javascript:history.back()">Cancel</a></div>
-                <div class="col"><input type="submit" class="form-control bg-success  fw-bolder text-light" value="Confirm"></div>
+                <div class="col"><input type="submit" onclick="localStorage.clear();" class="form-control bg-success  fw-bolder text-light" value="Confirm"></div>
             </div>
         </div>
     </form>
