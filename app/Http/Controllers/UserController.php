@@ -37,11 +37,6 @@ class UserController extends Controller
      */
     public function createuser(Request $request)
     {
-        if ($request->hasFile('profile')) {
-            $file = $request->file('profile');
-            $fname = $file->getClientOriginalName();
-            $file->move("images", $fname);
-        }
         $validated = $request->validate(
             [
                 'name' => 'required',
@@ -62,7 +57,11 @@ class UserController extends Controller
                 'password.regex' => 'password must include integer,uppercase,lowercase,sign'
             ]
         );
-
+        if ($request->hasFile('profile')) {
+            $file = $request->file('profile');
+            $fname = $file->getClientOriginalName();
+            $file->move("images", $fname);
+        }
         return view('users.confirmuser', ['user' => $request, 'fname' => $fname]);
     }
     /**

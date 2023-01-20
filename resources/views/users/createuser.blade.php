@@ -76,20 +76,9 @@
             </tr>
             <tr>
                 <td>
-
-
-
                 </td>
                 <td>
-
-                    @php
-                    $userid=Auth::user()->id;
-                    $images=DB::table('users')->where('id',$userid)->first();
-                    $image=explode('|',$images->profile);
-                    @endphp
-                    @foreach($image as $item)
-                    <img id="preview-image-before-upload" src="/public/images/{{$item}}" style="max-height: 250px;">
-                    @endforeach
+                    <img id="preview-image-before-upload" src="" style="max-height: 250px;">
                 </td>
             </tr>
             <tr>
@@ -112,22 +101,30 @@
     </form>
 </div>
 <script type="text/javascript">
-    $(document).ready(function(e) {
+    document.querySelector('#profile').addEventListener('change', function() {
+        const reader = new FileReader();
 
-
-        $('#profile').change(function() {
-
-            let reader = new FileReader();
-
-            reader.onload = (e) => {
-
-                $('#preview-image-before-upload').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(this.files[0]);
-
+        reader.addEventListener('load', () => {
+            localStorage.setItem('image', reader.result);
         });
 
+        reader.readAsDataURL(this.files[0]);
+    })
+    document.addEventListener("DOMContentLoaded", () => {
+        const recentimage = localStorage.getItem('image', );
+        if (recentimage) {
+            document.querySelector('#preview-image-before-upload').setAttribute('src', recentimage);
+        }
+    });
+
+    $(document).ready(function(e) {
+        $('#profile').change(function() {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                $('#preview-image-before-upload').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
     });
 </script>
 
