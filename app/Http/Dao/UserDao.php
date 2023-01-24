@@ -65,16 +65,11 @@ class UserDao implements userDaoInterface
     }
     public function updatepassword($id, $request)
     {
-        $old = User::where('id', $id)->first();
-        $typepass = $request->oldpassword;
-        if (Hash::check($typepass, $old->password)) {
-            $user = User::where('id', $id)->update([
-                'password' => Hash::make($request->newpassword),
-            ]);
-            return $user;
-        } else {
-            return redirect()->back()->withErrors(['msg' => 'Re enter your old password!!!!']);;
-        }
+
+        $user = User::where('id', $id)->update([
+            'password' => Hash::make($request->newpassword),
+        ]);
+        return $user;
     }
 
     public function findUserById($id)

@@ -49,7 +49,6 @@ class UserController extends Controller
                 ],
                 'confirmpassword' => 'required',
                 'profile' => 'required',
-                'date' => 'nullable|before:today'
             ],
             [
                 'password.required' => 'fill the password please',

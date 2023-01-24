@@ -20,10 +20,6 @@ class PostService implements postInterface
     {
         return $this->PostDao->create($request);
     }
-    public function search($request)
-    {
-        return $this->PostDao->search($request);
-    }
     public function edit($id)
     {
         return $this->PostDao->edit($id);

@@ -38,20 +38,6 @@ class PostController extends Controller
         return view('home', ['posts' => $posts, 'type' => $loginUser]);
     }
     /**
-     * search post
-     * 
-     * @param Request $request
-     * 
-     * @return $posts,$type
-     * 
-     */
-    public function search(Request $request)
-    {
-        $loginUser = Auth::user()->type;
-        $posts = $this->postService->search($request);
-        return view('home', ['posts' => $posts, 'type' => $loginUser]);
-    }
-    /**
      * Save post
      * 
      * @param Request $request
