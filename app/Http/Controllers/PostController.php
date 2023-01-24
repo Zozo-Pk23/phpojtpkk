@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\PostExport;
 use App\Http\Services\PostService;
 use App\Imports\PostImport;
+use App\Models\Post;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -81,11 +82,14 @@ class PostController extends Controller
      */
     public function updateblade($id, Request $request)
     {
+        //dd($request->title,);
+        $post = Post::where('id', $id)->first();
+        //dd($post->id);
         $validated = $request->validate([
             'des' =>  'required',
             'title' => [
                 'required',
-                Rule::unique('posts', 'title')->ignore(1, 'posts.delete_flag'),
+                Rule::unique('posts')->ignore($request->id)->where('posts.delete_flag', 0),
                 'max:255'
             ]
         ]);

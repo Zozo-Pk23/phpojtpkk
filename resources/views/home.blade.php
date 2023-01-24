@@ -7,7 +7,7 @@
         <div class="row justify-content-center my-5">
             <form action="/home" method="get" class="col-6 row">
                 @csrf
-                <div class="col-8 text-center"><input type="text" placeholder="Search title or description" class="form-control" name="searchitem" id="searchitem"></div>
+                <div class="col-8 text-center"><input type="text" value="{{request('searchitem')}}" placeholder="Search title or description" class="form-control" name="searchitem" id="searchitem"></div>
                 <button type="submit" class="btn btn-info col-4">Search</button>
             </form>
             <div class="col-2 text-center"><a href="/upload" class="btn btn-info form-control">Upload</a></div>

@@ -43,14 +43,4 @@ class PostImport implements ToCollection, WithValidation, WithHeadingRow
             '*.description' => ['required'],
         ];
     }
-    // public function model(array $row)
-    // {
-    //     return new Post([
-    //         'title'     => $row['title'],
-    //         'description'    => $row['description'],
-    //         'status' => 1,
-    //         'created_user_id' => Auth::user()->id,
-    //         'updated_user_id' => Auth::user()->id,
-    //     ]);
-    // }
 }

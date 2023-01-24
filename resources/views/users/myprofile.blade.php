@@ -5,14 +5,6 @@
     @csrf
     <div class="container justify-content-center text-center">
         <h1>User Profile</h1>
-        <!-- <input type="hidden" name="id" value="{{$user->id}}">
-        <input type="hidden" name="name" value="{{$user->name}}">
-        <input type="hidden" name="email" value="{{$user->email}}">
-        <input type="hidden" name="type" value="{{$user->type}}">
-        <input type="hidden" name="phone" value="{{$user->phone}}">
-        <input type="hidden" name="profile" value="{{$user->profile}}">
-        <input type="hidden" name="date_of_birth" value="{{$user->date_of_birth}}">
-        <input type="hidden" name="address" value="{{$user->address}}"> -->
         <table class="table" style="width: 60%;margin:0 auto;">
             <tr>
                 <td>Name</td>

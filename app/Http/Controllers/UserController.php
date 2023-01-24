@@ -116,7 +116,7 @@ class UserController extends Controller
         ], [
             'newpassword.regex' => 'New must include integer,uppercase,lowercase,sign'
         ]);
-        $old = User::where('id', $id)->first();
+        $old = $this->userService->findUserById($id);
         $typepass = $request->oldpassword;
         if (Hash::check($typepass, $old->password)) {
             $this->userService->updatepassword($id, $request);
