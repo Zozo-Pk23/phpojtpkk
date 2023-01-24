@@ -60,7 +60,6 @@ class UserDao implements userDaoInterface
         $user = User::where('id', $id)->update([
             'delete_flag' => 1
         ]);
-        //$user = User::where('id', $id)->delete();
         return $user;
     }
     public function updatepassword($id, $request)
@@ -79,7 +78,6 @@ class UserDao implements userDaoInterface
     }
     public function updateProfile($id, $request)
     {
-        // sdd($request);
         $user = User::where('id', $id)->update([
             'name' => $request->name,
             'email' => $request->email,

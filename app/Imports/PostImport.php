@@ -21,11 +21,6 @@ class PostImport implements ToCollection, WithValidation, WithHeadingRow
 
     public function collection(SupportCollection $rows)
     {
-        // Validator::make($rows->toArray(), [
-        //     '*.title' => ['required', 'max:50', 'unique:posts,title'],
-        //     '*.description' => ['required'],
-        // ])->validate();
-
         foreach ($rows as $row) {
             Post::create([
                 'title' => $row['title'],

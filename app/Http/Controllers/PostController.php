@@ -82,9 +82,7 @@ class PostController extends Controller
      */
     public function updateblade($id, Request $request)
     {
-        //dd($request->title,);
         $post = Post::where('id', $id)->first();
-        //dd($post->id);
         $validated = $request->validate([
             'des' =>  'required',
             'title' => [
