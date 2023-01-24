@@ -4,10 +4,8 @@ namespace App\Http\Dao;
 
 use App\Contracts\Dao\postDaoInterface;
 use App\Models\Post;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Console\Input\Input;
 
 class PostDao implements postDaoInterface
 {

@@ -5,18 +5,11 @@ namespace App\Http\Controllers;
 use App\Exports\PostExport;
 use App\Http\Services\PostService;
 use App\Imports\PostImport;
-use App\Models\Post;
-use App\Models\User;
-use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Validators\Failure;
 
 class PostController extends Controller
 {
