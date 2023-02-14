@@ -12,7 +12,6 @@ class UserDao implements userDaoInterface
 {
     public function index()
     {
-
         $users = DB::table('users')->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
             ->where('users.delete_flag', 0)
@@ -64,7 +63,7 @@ class UserDao implements userDaoInterface
     }
     public function updatepassword($id, $request)
     {
-
+        // \Log::info($id);
         $user = User::where('id', $id)->update([
             'password' => Hash::make($request->newpassword),
         ]);

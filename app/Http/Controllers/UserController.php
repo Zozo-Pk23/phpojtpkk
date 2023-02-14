@@ -58,6 +58,7 @@ class UserController extends Controller
         if ($request->hasFile('profile')) {
             $file = $request->file('profile');
             $fname = $file->getClientOriginalName();
+            \Log::info($file);
             $file->move("images", $fname);
         }
         return view('users.confirmuser', ['user' => $request, 'fname' => $fname]);
@@ -185,5 +186,39 @@ class UserController extends Controller
     {
         $this->userService->updateProfile($id, $request);
         return redirect()->route('home');
+    }
+
+    public function login(Request $request)
+    {
+        try {
+            $loginDetails = $request->only('email', 'password');
+            $validated = $request->validate([
+                'email' => 'required',
+                'password' => 'required'
+            ]);
+
+            if (Auth::attempt($loginDetails)) {
+                $token = auth()->user()->createToken('passport_token')->accessToken;
+                $data = Auth::user();
+                return response()->json([
+                    'message' => 'login successful',
+                    'token' => $token,
+                    'data' => $data,
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Wrong login details'
+                ], 401);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while trying to log in',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function logout()
+    {
+        Auth::logout();
     }
 }

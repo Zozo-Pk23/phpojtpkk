@@ -26,8 +26,8 @@ class PostImport implements ToCollection, WithValidation, WithHeadingRow
                 'title' => $row['title'],
                 'description' => $row['description'],
                 'status' => 1,
-                'created_user_id' => Auth::user()->id,
-                'updated_user_id' => Auth::user()->id,
+                'created_user_id' => 1,
+                'updated_user_id' => 1,
             ]);
         }
     }

@@ -30,7 +30,7 @@ return new class extends Migration
             $table->integer('updated_user_id');
             $table->foreign('updated_user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('deleted_user_id')->nullable();
-            $table->rememberToken()->nullable();
+            $table->rememberToken();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
             $table->timestamp('deleted_at')->nullable();

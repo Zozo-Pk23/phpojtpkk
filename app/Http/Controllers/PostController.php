@@ -27,9 +27,14 @@ class PostController extends Controller
      */
     public function index()
     {
+
         $loginUser = Auth::user()->type;
         $posts = $this->postService->index();
         return view('home', ['posts' => $posts, 'type' => $loginUser]);
+    }
+    public function show(Post $post)
+    {
+        return response()->json(['post' => $post]);
     }
     /**
      * Save post
@@ -138,6 +143,7 @@ class PostController extends Controller
             'file' => 'required|mimes:csv|max:2080'
         ]);
         $file = $request->file('file');
+        \Log::info($file);
         if ($request->file('file')) {
             try {
                 Excel::import(new PostImport, $file);
