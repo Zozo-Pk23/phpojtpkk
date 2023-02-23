@@ -106,7 +106,7 @@
                                 Profile
                             </td>
                             <td>
-                                <img src="{{asset('images/' . $user->profile)}}" style="max-height: 100px;" id="oldprofile" name="oldprofile">
+                                <img src="{{asset('storage/' . $user->profile)}}" style="max-height: 100px;" id="oldprofile" name="oldprofile">
                             </td>
                         </tr>
                         <tr>

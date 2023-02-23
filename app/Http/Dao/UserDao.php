@@ -20,6 +20,7 @@ class UserDao implements userDaoInterface
                 $email = request()->input('searchemail');
                 $startdate = request()->input('createdfrom');
                 $enddate = request()->input('createdto');
+                \Log::info($enddate);
                 $query
                     ->when($name, function ($qry) use ($name) {
                         $qry->where('users.name', 'LIKE', "%" . $name . " %");

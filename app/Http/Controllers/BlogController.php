@@ -21,20 +21,23 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $loginUser = Auth::user()->type;
+        $loginUserId = Auth::user()->id;
         $posts = DB::table('posts')
-            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.status', 'posts.updated_at', 'posts.delete_flag')
+            ->select('posts.id', 'posts.title', 'posts.description', 'users.name As pname', 'uone.name As uname', 'posts.created_at', 'posts.status', 'posts.updated_at',)
             ->leftjoin('users', 'users.id', '=', 'posts.created_user_id')
             ->rightJoin('users as uone', 'uone.id', '=', 'posts.updated_user_id')
-            ->where('posts.delete_flag', 0)
+            ->where('posts.delete_flag', '=', '0')
             ->where(function ($query) {
                 $searchitem = request()->input('searchitem');
-                \Log::info($searchitem);
                 $query->where("title", "LIKE", "%{$searchitem}%")->orWhere("description", "LIKE", "%{$searchitem}%");
             })
+            ->when($loginUser == 0, function ($query) use ($loginUserId) {
+                $query->where('posts.created_user_id', $loginUserId);
+            })
             ->get();
-        \Log::info($posts);
         return response()->json($posts);
         //
     }
@@ -63,8 +66,8 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        \Log::info($request);
-        Post::create(['title' => $request['title'], 'description' => $request['description'], 'created_user_id' => 1, 'updated_user_id' => 1]);
+        $id = Auth::user()->id;
+        Post::create(['title' => $request['data']['title'], 'description' => $request['data']['description'], 'created_user_id' => $id, 'updated_user_id' => $id]);
     }
 
     public function confirmstore(Request $request)
@@ -92,7 +95,6 @@ class BlogController extends Controller
      */
     public function edit(Request $request)
     {
-        \Log::info($request);
         $id = $request->id['id'];
         $data = $request->id;
         $validated = Validator::make(
@@ -122,9 +124,9 @@ class BlogController extends Controller
      */
     public function update(Request $request)
     {
-        \Log::info($request['id']);
+        $id = Auth::user()->id;
         $post = $request['id'];
-        return Post::where('id', $post['id'])->update(['title' => $post['title'], 'description' => $post['description'], 'updated_user_id' => 1, 'status' => $post['status']]);
+        return Post::where('id', $post['id'])->update(['title' => $post['title'], 'description' => $post['description'], 'updated_user_id' => $id, 'status' => $post['status']]);
     }
 
     /**
@@ -135,7 +137,6 @@ class BlogController extends Controller
      */
     public function destroy(Request $request)
     {
-        \Log::info($request);
         return Post::where('id', $request['id'])->update([
             'delete_flag' => 1
         ]);
@@ -152,9 +153,9 @@ class BlogController extends Controller
     }
     public function upload(Request $request)
     {
-        \Log::info($request);
-        $validator =  Validator::make($request->all(), [
-            'file' => 'required',
+        $validator =  Validator::make($request['file'], [
+            'name' => 'required',
+            'type' =>  ['required', Rule::in(['text/csv', 'text/comma-separated-values'])],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -164,20 +165,10 @@ class BlogController extends Controller
         $file = base64_decode($request->uri);
         $tempFile = tempnam(sys_get_temp_dir(), 'temp_file_');
         file_put_contents($tempFile, $file);
-        \Log::info($file);
-        \Log::info($tempFile);
-
-        // validate the file using the `mimes` and `max` rules
-        // $validator = Validator::make(['file' => $tempFile], [
-        //     'file' => 'mimes:comma-separated-values|max:2080',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json(['message' => $validator->errors()], 400);
-        // }
         if ($tempFile) {
             try {
                 Excel::import(new PostImport, $tempFile);
+                return response()->json(['success' => true, 'message' => 'uploaded succesfully']);
             } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
                 $messages = $e->failures();
                 return response()->json(['message', $messages]);
@@ -186,16 +177,15 @@ class BlogController extends Controller
     }
     public function something(Request $request)
     {
-        \Log::info($request);
         $validated = Validator::make(
-            $request->all(),
+            $request['title'],
             [
-                'title.title' => [
+                'title' => [
                     'required',
                     Rule::unique('posts', 'title')->ignore(1, 'posts.delete_flag'),
                     'max:255',
                 ],
-                'title.description' =>  'required|max:255',
+                'description' =>  'required|max:255',
             ]
         );
         if ($validated->fails()) {

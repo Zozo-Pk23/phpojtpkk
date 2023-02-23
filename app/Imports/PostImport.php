@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Post;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -26,15 +27,15 @@ class PostImport implements ToCollection, WithValidation, WithHeadingRow
                 'title' => $row['title'],
                 'description' => $row['description'],
                 'status' => 1,
-                'created_user_id' => 1,
-                'updated_user_id' => 1,
+                'created_user_id' => Auth::user()->id,
+                'updated_user_id' => Auth::user()->id,
             ]);
         }
     }
     public function rules(): array
     {
         return [
-            '*.title' => ['required', 'max:50', 'unique:posts,title'],
+            '*.title' =>  ['required', Rule::unique("posts", "title")->whereNull('deleted_at')],
             '*.description' => ['required'],
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Image;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,18 +20,12 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator as ValidationValidator;
 
+use function PHPUnit\Framework\returnSelf;
+
 class ProfileController extends Controller
 {
-
-    private $userService;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        \Log::info($request);
         $users = DB::table('users')->select('users.id', 'users.name', 'users.email', 'u2.name As pname', 'users.phone', 'users.date_of_birth', 'users.address', 'users.created_at', 'users.updated_at', 'users.profile')
             ->join('users As u2', 'u2.id', '=', 'users.created_user_id')
             ->where('users.delete_flag', 0)
@@ -40,31 +35,25 @@ class ProfileController extends Controller
                 $startdate = request()->input('createdfrom');
                 $enddate = request()->input('createdto');
                 $query
-                    ->when($name, function ($qry) use ($name) {
-                        $qry->where('users.name', 'LIKE', "%" . $name . " %");
-                    })
-                    ->when($startdate, function ($qry) use ($startdate) {
-                        $qry->whereDate('users.created_at', '>=', $startdate);
+                    ->when($startdate, function ($query) use ($startdate) {
+                        $query->whereDate('users.created_at', '>=', $startdate);
                     })
                     ->when($enddate, function ($query) use ($enddate) {
                         $query->whereDate('users.created_at', '<=', $enddate);
+                    })
+                    ->when($name, function ($query) use ($name) {
+                        $query->where('users.name', 'LIKE', "%" . $name . "%");
                     })
                     ->when($email, function ($query) use ($email) {
                         $query->where('users.email', 'LIKE', "%" . $email . "%");
                     });
             })
             ->get();
-        return response()->json($users);
+        return $users;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
-        // \Log::info($request);
         $validated = Validator::make(
             $request->all(),
             [
@@ -78,6 +67,7 @@ class ProfileController extends Controller
                 ],
                 'confirmpassword' => 'required',
                 'image' => 'required',
+                'phone' => 'numeric'
             ]
         );
         if ($validated->fails()) {
@@ -88,11 +78,11 @@ class ProfileController extends Controller
     }
     public function confirm(Request $request)
     {
+        $id = Auth::user()->id;
         $image = $request['image'];
         $fileName = uniqid() . '.jpg';
         $path = storage_path('app/public/' . $fileName);
         $success = file_put_contents($path, base64_decode($image));
-        \Log::info($request['selectedImage']['assets'][0]['uri']);
         $datetime = $request['selectedDate'];
         $carbon = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $datetime);
         $result = $carbon->format('Y-m-d H:i:s');
@@ -100,89 +90,55 @@ class ProfileController extends Controller
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-            'profile' => $request['selectedImage']['assets'][0]['uri'],
+            'profile' => $fileName,
             'type' => $request['value'],
             'phone' => $request['phone'],
             'address' => $request['address'],
             'delete_flag' => 0,
             'date_of_birth' => $result,
-            'created_user_id' => 1,
-            'updated_user_id' => 1,
+            'created_user_id' => $id,
+            'updated_user_id' => $id,
         ]);
         return $users;
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request)
     {
-        $validator = Validator::make($request, [
-            'name' => 'required',
-            'email' => 'required|email:rfc',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
+        $validated = Validator::make(
+            $request['name'],
+            [
+                'name' => 'required',
+                'email' => 'required|email:rfc',
+                'phone' => 'numeric'
+            ]
+        );
+        if ($validated->fails()) {
+            return response()->json(['message' => $validated->errors()], 400);
+        } else {
+            return response()->json(['success' => true, 'message' => 'Ok']);
         }
-        return response()->json(['success' => true, 'message' => 'Data has been saved']);
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
-        \Log::info($request);
-        $datetime = $request['selectedDate'];
-        $carbon = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $datetime);
-        $result = $carbon->format('Y-m-d H:i:s');
-        return DB::table('users')
-            ->where('id', $request['id'])
+        if ($request->newphoto) {
+            $image = $request->newphoto;
+            $fileName = uniqid() . '.jpg';
+            $path = storage_path('app/public/' . $fileName);
+            $success = file_put_contents($path, base64_decode($image));
+        } else {
+            $fileName = $request['data']['selectedImage'];
+        }
+        $users = User::where('id', $request['data']['id'])
             ->update([
-                'name' => $request['name'],
-                'email' => $request['email'],
-                'type' => $request['value'],
-                'phone' => $request['phone'],
-                'date_of_birth' => $result,
-                'address' => $request['address'],
+                'name' => $request['data']['name'],
+                'email' => $request['data']['email'],
+                'profile' => $fileName,
+                'type' => $request['data']['value'],
+                'phone' => $request['data']['phone'],
+                'date_of_birth' => $request['data']['dateone'],
+                'address' => $request['data']['address'],
             ]);
+        return $users;
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         return User::where('id', $request['id'])->update([
@@ -207,9 +163,6 @@ class ProfileController extends Controller
 
     public function passwordreset(Request $request)
     {
-        \Log::info($request->oldpassword);
-        \Log::info($request->data['password']);
-        \Log::info($request);
         $validated = Validator::make(
             $request->all(),
             [
@@ -227,40 +180,78 @@ class ProfileController extends Controller
             ]
         );
         if ($validated->fails()) {
-            return response()->json(['message' => $validated->errors()], 400);
+            return response()->json(['message' => $validated->errors()]);
         } else {
-            $old = $request->data['password'];
-            $id = $request->data['id'];
+            $old = Auth::user()->password;
+            $id = Auth::user()->id;
             $typepass = $request->oldpassword;
+
             if (Hash::check($typepass, $old)) {
-                return User::where('id', $id)->update([
+                $user = User::where('id', $id)->update([
                     'password' => Hash::make($request->newpassword),
                 ]);
+                return response()->json(['message' => 'password changed successfully', 'user' => $user]);
             } else {
-                return response()->json(['message' => 'Re enter your password', 400]);
+                return response()->json(['message'  => [
+                    'oldpassword' => [
+                        'Re enter your password'
+                    ]
+                ], 400]);
             }
         }
     }
-    public function forgotpassword(Request $request)
+    public function login(Request $request)
     {
-        \Log::info($request);
-        $this->validateEmail($request);
+        try {
+            $loginDetails = $request->only('email', 'password');
+            $validated = Validator::make(
+                $request->all(),
+                [
+                    'email' => 'required',
+                    'password' => 'required'
+                ]
+            );
+            if ($validated->fails()) {
+                return response()->json(['message' => $validated->errors()], 400);
+            }
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json([
+                    'message'  => [
+                        'email' => [
+                            'Email does not existed'
+                        ]
+                    ]
+                ], 422);
+            }
 
-        $response = $this->broker()->sendResetLink(
-            $request->only('email')
-        );
-
-        return $response == Password::RESET_LINK_SENT
-            ? response()->json(['message' => 'Password reset email sent'])
-            : response()->json(['error' => 'Unable to send password reset email'], 500);
+            if (Auth::attempt($loginDetails)) {
+                $token = auth()->user()->createToken('passport_token')->accessToken;
+                $data = Auth::user();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'login successful',
+                    'token' => $token,
+                    'data' => $data,
+                ], 200);
+            } else {
+                return response()->json([
+                    'message'  => [
+                        'password' => [
+                            'Wrong Password Details'
+                        ]
+                    ]
+                ], 422);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while trying to log in',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-    protected function broker()
+    public function logout()
     {
-        return Password::broker();
-    }
-
-    protected function validateEmail(Request $request)
-    {
-        $request->validate(['email' => 'required|email']);
+        Auth::logout();
     }
 }
